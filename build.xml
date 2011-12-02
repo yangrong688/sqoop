@@ -30,9 +30,29 @@
       <pathelement location="${basedir}/lib/ant-contrib-1.0b3.jar"/>
     </classpath>
   </taskdef>
-
+  
+  <!-- Initializes ivy/libraries.properties and build.properties with CDH versions -->
+  <if>
+    <and>
+      <not>
+        <isset property="cdh.maven" />
+      </not>
+      <not>
+        <available file="${basedir}/cdh.build.properties" />
+      </not>
+    </and>
+    <then>
+      <exec  executable="mvn" dir="${basedir}" failonerror="true">
+        <arg value="-f" />
+        <arg value="cloudera-pom.xml" />
+        <arg value="process-resources"/>
+      </exec>
+    </then>
+  </if>
+  
   <!-- Load system-wide and project-wide default properties set by
        the user, to avoid needing to override with -D. -->
+  <property file="${basedir}/cdh.build.properties" />
   <property file="${user.home}/build.properties" />
   <property file="${basedir}/build.properties" />
 
