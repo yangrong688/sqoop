@@ -56,6 +56,8 @@
   <property file="${user.home}/build.properties" />
   <property file="${basedir}/build.properties" />
 
+  <!-- used to mark if we're testing against mr1 -->
+  <property name="mr1.test" value="" />
   <!-- some basic properties -->
   <property environment="env"/>
   <property name="name" value="sqoop" />
@@ -1155,7 +1157,7 @@
   <!-- retrieve ivy-managed test artifacts from the Hadoop distribution -->
   <target name="ivy-resolve-hadoop-test" depends="ivy-init"
       unless="hadoop.is.local">
-    <ivy:resolve settingsRef="${name}.ivy.settings" conf="hadoop${hadoopversion}test" />
+    <ivy:resolve settingsRef="${name}.ivy.settings" conf="hadoop${hadoopversion}${mr1.test}test" />
   </target>
   <target name="ivy-retrieve-hadoop-test"
       depends="ivy-init,ivy-resolve-hadoop-test">
@@ -1163,7 +1165,7 @@
           pattern="${build.ivy.lib.dir}/${ivy.artifact.retrieve.pattern}"
           sync="true" />
         <ivy:cachepath pathid="${name}.hadooptest.classpath"
-          conf="hadoop${hadoopversion}test" />
+          conf="hadoop${hadoopversion}${mr1.test}test" />
   </target>
 
   <!-- retrieve ivy-managed artifacts for checkstyle -->
