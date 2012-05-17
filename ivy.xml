@@ -148,6 +148,8 @@ under the License.
       <exclude org="com.sun.jersey" module="jersey-server"/>
       <exclude org="org.apache.thrift" module="thrift"/>
       <exclude org="log4j" module="log4j"/>
+      <exclude org="org.slf4j" module="slf4j-api"/>
+      <exclude org="org.slf4j" module="slf4j-log4j12"/>
       <exclude org="org.apache.hadoop" module="hadoop-core" />
       <exclude org="com.cloudera.cdh" module="zookeeper-ant" />
     </dependency>
