@@ -31,6 +31,25 @@
     </classpath>
   </taskdef>
 
+ <!-- Initializes ivy/libraries.properties and build.properties with CDH versions -->
+ <if>
+   <and>
+     <not>
+       <isset property="cdh.maven" />
+     </not>
+     <not>
+       <available file="${basedir}/cdh.build.properties" />
+     </not>
+   </and>
+   <then>
+     <exec  executable="mvn" dir="${basedir}" failonerror="true">
+       <arg value="-f" />
+       <arg value="cloudera-pom.xml" />
+        <arg value="process-resources"/>
+     </exec>
+   </then>
+ </if>
+
   <!-- Set default Hadoop version if not set -->
   <if>
     <isset property="hadoopversion" />
@@ -43,56 +62,14 @@
     </else>
   </if>
 
-	<!-- Set variables per target hadoop version -->
-  <if>
-    <equals arg1="${hadoopversion}" arg2="20" />
-    <then>
-      <property name="hadoop.version" value="0.20.2-cdh3u1" />
-      <property name="hbase.version" value="0.90.3-cdh3u1" />
-      <property name="zookeeper.version" value="3.3.3-cdh3u1" />
-      <property name="hadoop.version.full" value="0.20" />
-    </then>
-
-    <elseif>
-      <equals arg1="${hadoopversion}" arg2="23" />
-      <then>
-        <property name="hadoop.version" value="0.23.1" />
-        <property name="hbase.version" value="0.92.0" />
-        <property name="zookeeper.version" value="3.4.2" />
-        <property name="hadoop.version.full" value="0.23" />
-      </then>
-    </elseif>
-
-    <elseif>
-      <equals arg1="${hadoopversion}" arg2="100" />
-      <then>
-        <property name="hadoop.version" value="1.0.0" />
-        <property name="hbase.version" value="0.92.0" />
-        <property name="zookeeper.version" value="3.4.2" />
-        <property name="hadoop.version.full" value="1.0.0" />
-      </then>
-    </elseif>
-
-    <elseif>
-      <equals arg1="${hadoopversion}" arg2="200" />
-      <then>
-        <property name="hadoop.version" value="2.0.0-alpha" />
-        <property name="hbase.version" value="0.92.0" />
-        <property name="zookeeper.version" value="3.4.2" />
-        <property name="hadoop.version.full" value="2.0.0-alpha" />
-      </then>
-    </elseif>
-
-    <else>
-      <fail message="Unrecognized hadoopversion. Can only be 20, 23, 100, or 200." />
-    </else>
-  </if>
-
   <!-- Load system-wide and project-wide default properties set by
        the user, to avoid needing to override with -D. -->
   <property file="${user.home}/build.properties" />
   <property file="${basedir}/build.properties" />
+  <property file="${basedir}/cdh.build.properties" />
 
+  <!-- used to mark if we're testing against mr1 -->
+  <property name="mr1.test" value="" />
   <!-- some basic properties -->
   <property environment="env"/>
   <property name="name" value="sqoop" />
@@ -1167,7 +1144,7 @@
   <!-- retrieve ivy-managed test artifacts from the Hadoop distribution -->
   <target name="ivy-resolve-hadoop-test" depends="ivy-init"
       unless="hadoop.is.local">
-    <ivy:resolve settingsRef="${name}.ivy.settings" conf="hadoop${hadoopversion}test" />
+    <ivy:resolve settingsRef="${name}.ivy.settings" conf="hadoop${hadoopversion}${mr1.test}test" />
   </target>
   <target name="ivy-retrieve-hadoop-test"
       depends="ivy-init,ivy-resolve-hadoop-test">
@@ -1175,7 +1152,7 @@
           pattern="${build.ivy.lib.dir}/${ivy.artifact.retrieve.pattern}"
           sync="true" />
         <ivy:cachepath pathid="${name}.hadooptest.classpath"
-          conf="hadoop${hadoopversion}test" />
+          conf="hadoop${hadoopversion}${mr1.test}test" />
   </target>
 
   <!-- retrieve ivy-managed artifacts for checkstyle -->
