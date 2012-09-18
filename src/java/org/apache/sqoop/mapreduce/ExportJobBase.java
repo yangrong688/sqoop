@@ -345,9 +345,8 @@ public class ExportJobBase extends JobBase {
       }
     }
 
+    Job job = new Job(conf);
     try {
-      Job job = new Job(conf);
-
       // Set the external jar to use for the job.
       job.getConfiguration().set("mapred.jar", ormJarFile);
 
@@ -357,6 +356,8 @@ public class ExportJobBase extends JobBase {
       configureMapper(job, tableName, tableClassName);
       configureNumTasks(job);
       cacheJars(job, context.getConnManager());
+
+      jobSetup(job);
       setJob(job);
       boolean success = runJob(job);
       if (!success) {
@@ -368,6 +369,7 @@ public class ExportJobBase extends JobBase {
       throw new IOException(cnfe);
     } finally {
       unloadJars();
+      jobTeardown(job);
     }
 
     // Unstage the data if needed
@@ -407,5 +409,20 @@ public class ExportJobBase extends JobBase {
     } catch (IOException ioe) {
       return FileType.UNKNOWN;
     }
+  }
+
+  /**
+   * Open-ended "setup" routine that is called after the job is configured
+   * but just before it is submitted to MapReduce. Subclasses may override
+   * if necessary.
+   */
+  protected void jobSetup(Job job) throws IOException, ExportException {
+  }
+
+  /**
+   * Open-ended "teardown" routine that is called after the job is executed.
+   * Subclasses may override if necessary.
+   */
+  protected void jobTeardown(Job job) throws IOException, ExportException {
   }
 }
