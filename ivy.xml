@@ -140,6 +140,7 @@ under the License.
     </dependency>
     <dependency org="org.apache.avro" name="avro-mapred" rev="${avro.version}"
       conf="common->default;redist->default">
+      <artifact name="avro-mapred" type="hadoop2" ext="jar" m:classifier="hadoop2"/>
       <exclude org="org.slf4j" module="slf4j-api"/>
       <exclude org="org.mortbay.jetty" module="jetty"/>
       <exclude org="org.jboss.netty" module="netty"/>
