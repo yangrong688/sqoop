@@ -48,6 +48,9 @@ under the License.
     <conf name="hadoop100test" visibility="private" extends="test,hadoop100" />
     <conf name="hadoop200test" visibility="private" extends="test,hadoop200" />
 
+    <conf name="hadoop23mr1test" visibility="private" extends="test,hadoop23" />
+    <conf name="hadoop20mr1test" visibility="private" extends="test,hadoop20" />
+    
     <!-- We don't redistribute everything we depend on (e.g., Hadoop itself);
          anything which Hadoop itself also depends on, we do not ship.
          Things we actually need to ship are marked with a 'redist'
@@ -111,9 +114,9 @@ under the License.
 
     <!-- Dependencies for Hadoop 0.20 -->
     <dependency org="org.apache.hadoop" name="hadoop-core"
-      rev="${hadoop.version}" conf="hadoop20->default"/>
+      rev="${hadoop-core.cloudera.version}" conf="hadoop20->default; hadoop23mr1test->default"/>
     <dependency org="org.apache.hadoop" name="hadoop-test"
-      rev="${hadoop.version}" conf="hadoop20test->default"/>
+      rev="${hadoop-core.cloudera.version}" conf="hadoop20test->default; hadoop23mr1test->default"/>
 
     <!-- Common dependencies for Sqoop -->
     <dependency org="commons-cli" name="commons-cli"
@@ -168,6 +171,8 @@ under the License.
       <exclude org="com.sun.jersey" module="jersey-server"/>
       <exclude org="org.apache.thrift" module="thrift"/>
       <exclude org="log4j" module="log4j"/>
+      <exclude org="org.slf4j" module="slf4j-api"/>
+      <exclude org="org.slf4j" module="slf4j-log4j12"/>
       <exclude org="org.apache.hadoop" module="hadoop-core" />
       <exclude org="com.cloudera.cdh" module="zookeeper-ant" />
     </dependency>
