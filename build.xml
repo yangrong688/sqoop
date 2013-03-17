@@ -283,7 +283,7 @@
   </path>
 
   <!-- "init" target used for setup purposes. -->
-  <target name="init">
+  <target name="init" depends="jvm-check">
     <!-- Path containing third-party libraries deployed directly with Sqoop.
          This does not include anything that Ivy can retrieve for us.
       -->
@@ -299,6 +299,22 @@
       <path refid="${name}.hadooptest.classpath" />
       <path refid="compile.classpath" />
     </path>
+  </target>
+
+  <!-- JVM version validation -->
+  <target name="jvm-check">
+      <property name="javaVersion" value="1.6"/>
+
+      <property name="requiredJavaVersion" value="xx${javaVersion}"/>
+      <property name="currentJavaVersion" value="xx${java.version}"/>
+      <condition property="jvm.fail">
+          <not>
+              <contains string="${currentJavaVersion}" substring="${requiredJavaVersion}"/>
+          </not>
+      </condition>
+      <fail if="jvm.fail">
+          Incorrect JVM, current = ${java.version}, required ${javaVersion}.
+      </fail>
   </target>
 
   <!-- generate the version information class. -->
@@ -961,7 +977,7 @@
     <fail unless="continueOnFailure">Unit tests failed!</fail>
   </target>
 
-  <target name="clean" description="Clean build target files">
+  <target name="clean" depends="jvm-check" description="Clean build target files">
     <delete dir="${build.dir}"/>
   </target>
 
