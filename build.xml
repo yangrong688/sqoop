@@ -593,6 +593,7 @@
       <tarfileset dir="${build.dir}" mode="755">
         <include name="${bin.artifact.name}/bin/*" />
         <include name="${bin.artifact.name}/testdata/hive/bin/*" />
+        <include name="${bin.artifact.name}/testdata/hcatalog/conf/*" />
         <include name="${bin.artifact.name}/**/*.sh" />
       </tarfileset>
     </tar>
@@ -636,12 +637,14 @@
       <tarfileset dir="${build.dir}" mode="664">
         <exclude name="${src.artifact.name}/bin/*" />
         <exclude name="${src.artifact.name}/testdata/hive/bin/*" />
+        <exclude name="${src.artifact.name}/testdata/hcatalog/conf/*" />
         <exclude name="${src.artifact.name}/**/*.sh" />
         <include name="${src.artifact.name}/**" />
       </tarfileset>
       <tarfileset dir="${build.dir}" mode="755">
         <include name="${src.artifact.name}/bin/*" />
         <include name="${src.artifact.name}/testdata/hive/bin/*" />
+        <include name="${src.artifact.name}/testdata/hcatalog/conf/*" />
         <include name="${src.artifact.name}/**/*.sh" />
       </tarfileset>
     </tar>
@@ -651,6 +654,9 @@
   <target name="test-prep" depends="test-prep-normal,test-prep-thirdparty,
                                     test-prep-manual"/>
 
+  <path id="hcatalog.conf.dir">
+     <pathelement location="${basedir}/testdata/hcatalog/conf"/>
+  </path>
   <target name="test-eval-condition">
     <condition property="thirdparty_or_manual">
       <or>
@@ -659,6 +665,8 @@
       </or>
     </condition>
   </target>
+
+
 
   <target name="test-prep-normal" unless="thirdparty_or_manual"
                                   depends="test-eval-condition">
@@ -705,7 +713,7 @@
     <delete dir="${test.log.dir}"/>
     <mkdir dir="${test.log.dir}"/>
     <delete dir="${build.test}/data"/>
-    <mkdir dir="${build.test}/data" />
+    <mkdir dir="${build.test}/data/sqoop" />
     <mkdir dir="${cobertura.class.dir}" />
     <junit
       printsummary="yes" showoutput="${test.output}"
@@ -796,9 +804,16 @@
       <sysproperty key="java.security.krb5.kdc"
                    value="${java.security.krb5.kdc}"/>
 
+      <!-- Location of Hive logs -->
+      <!--<sysproperty key="hive.log.dir"
+                   value="${test.build.data}/sqoop/logs"/> -->
+
       <classpath>
         <!-- instrumented classes go ahead of normal classes -->
         <pathelement location="${cobertura.class.dir}" />
+
+        <!-- Location of hive-site xml and other hadoop config files -->
+        <path refid="hcatalog.conf.dir" />
 
         <!-- main classpath here. -->
         <path refid="test.classpath" />

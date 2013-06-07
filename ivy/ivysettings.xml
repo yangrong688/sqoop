@@ -45,6 +45,9 @@ under the License.
   <property name="snapshots.cloudera.com"
       value="https://repository.cloudera.com/artifactory/libs-snapshot-local/"
       override="false"/>
+  <property name="www.datanucleus.org"
+      value="http://www.datanucleus.org/downloads/maven2/"
+      override="false"/>
   <property name="maven2.pattern"
       value="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier])"/>
   <property name="repo.dir" value="${user.home}/.m2/repository"/>
@@ -59,6 +62,8 @@ under the License.
              checkmodified="true"
              pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
     <ibiblio name="maven2" root="${repo.maven.org}"
+        pattern="${maven2.pattern.ext}" m2compatible="true"/>
+    <ibiblio name="datanucleus" root="${www.datanucleus.org}"
         pattern="${maven2.pattern.ext}" m2compatible="true"/>
     <ibiblio name="cloudera-releases" root="${releases.cloudera.com}"
         pattern="${maven2.pattern.ext}" m2compatible="true"/>
@@ -79,6 +84,7 @@ under the License.
       <resolver ref="apache-snapshot"/>
       <resolver ref="cloudera-releases"/>
       <resolver ref="cloudera-snapshot"/>
+      <resolver ref="datanucleus"/>
       <resolver ref="maven2"/>
     </chain>
 
@@ -87,6 +93,7 @@ under the License.
       <resolver ref="fs"/>
       <resolver ref="apache-snapshot"/>
       <resolver ref="cloudera-releases"/>
+      <resolver ref="datanucleus"/>
       <resolver ref="maven2"/>
     </chain>
 
