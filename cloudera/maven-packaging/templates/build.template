@@ -6,6 +6,8 @@ hadoop.version=org.apache.hadoop:hadoop-main.version
 
 hbase.version=org.apache.hbase:hbase.version
 
+hcatalog.version=org.apache.hcatalog:hcatalog-core.version
+
 zookeeper.version=org.apache.zookeeper:zookeeper.version
 
 avro.version=org.apache.avro:avro.version

@@ -30,6 +30,8 @@ hadoop-core.cloudera.version=org.apache.hadoop:hadoop-core.version
 
 hbase.version=org.apache.hbase:hbase.version
 
+hcatalog.version=org.apache.hcatalog:hcatalog.version
+
 zookeeper.version=org.apache.zookeeper:zookeeper.version
 
 hsqldb.version=hsqldb:hsqldb.version

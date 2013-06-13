@@ -186,6 +186,7 @@ under the License.
     <dependency org="org.apache.hcatalog" name="hcatalog-core"
       rev="${hcatalog.version}" conf="hcatalog->default">
       <artifact name="hcatalog-core" type="jar"/>
+      <exclude org="org.apache.avro" module="avro-mapred"/>
     </dependency>
 
     <exclude org="org.apache.hadoop" module="avro"/>

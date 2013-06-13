@@ -83,6 +83,11 @@
     </dependency>
     
     <dependency>
+      <groupId>org.apache.hcatalog</groupId>
+      <artifactId>hcatalog-core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
     </dependency>
