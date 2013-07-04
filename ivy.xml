@@ -189,6 +189,9 @@ under the License.
       <exclude org="org.apache.avro" module="avro-mapred"/>
     </dependency>
 
+    <dependency org="org.postgresql" name="postgresql"
+      rev="${postgresql.version}" conf="common->default" />
+
     <exclude org="org.apache.hadoop" module="avro"/>
     <exclude org="commons-daemon" module="commons-daemon" />
     <exclude type="pom" />
