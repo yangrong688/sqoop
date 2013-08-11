@@ -51,7 +51,7 @@ if [ -z "${HADOOP_MAPRED_HOME}" ]; then
   if [ -n "${HADOOP_HOME}" ]; then
     HADOOP_MAPRED_HOME=${HADOOP_HOME}
   else
-    HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
+    HADOOP_MAPRED_HOME=/usr/lib/hadoop-0.20-mapreduce
   fi
 fi
 
