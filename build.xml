@@ -1180,7 +1180,6 @@
 
   <target name="clean" depends="jvm-check" description="Clean build target files">
     <delete dir="${build.dir}"/>
-    <delete file="${basedir}/cdh.build.properties" />
   </target>
 
   <target name="clean-cache" description="Remove cached dependencies">
