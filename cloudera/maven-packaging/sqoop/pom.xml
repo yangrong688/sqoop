@@ -83,7 +83,7 @@
     </dependency>
     
     <dependency>
-      <groupId>org.apache.hcatalog</groupId>
+      <groupId>org.apache.hive.hcatalog</groupId>
       <artifactId>hcatalog-core</artifactId>
     </dependency>
 

@@ -34,7 +34,7 @@ hadoop-core.cloudera.version=org.apache.hadoop:hadoop-core.version
 
 hbase95.version=org.apache.hbase:hbase-common.version
 
-hcatalog.version=org.apache.hcatalog:hcatalog.version
+hcatalog.version=org.apache.hive.hcatalog:hcatalog.version
 
 zookeeper.version=org.apache.zookeeper:zookeeper.version
 
