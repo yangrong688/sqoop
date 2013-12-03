@@ -84,7 +84,7 @@
     
     <dependency>
       <groupId>org.apache.hive.hcatalog</groupId>
-      <artifactId>hcatalog-core</artifactId>
+      <artifactId>hive-hcatalog-core</artifactId>
     </dependency>
 
     <dependency>
