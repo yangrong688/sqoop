@@ -100,6 +100,10 @@ under the License.
       rev="${hadoop.version}" conf="hadoop210->default"/>
     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core"
       rev="${hadoop.version}" conf="hadoop210->default"/>
+    <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
+      conf="hadoop210->default"/>
+    <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
+      conf="hadoop210->default"/>
 
     <!-- Dependencies for Hadoop 2.0.0 -->
     <dependency org="org.apache.hadoop" name="hadoop-common"
@@ -116,6 +120,10 @@ under the License.
       rev="${hadoop.version}" conf="hadoop200->default"/>
     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core"
       rev="${hadoop.version}" conf="hadoop200->default"/>
+    <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
+      conf="hadoop200->default"/>
+    <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
+      conf="hadoop200->default"/>
 
     <!-- Dependencies for Hadoop 0.23 -->
     <dependency org="org.apache.hadoop" name="hadoop-common"
@@ -132,18 +140,30 @@ under the License.
       rev="${hadoop.version}" conf="hadoop23->default"/>
     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core"
       rev="${hadoop.version}" conf="hadoop23->default"/>
+    <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
+      conf="hadoop23->default"/>
+    <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
+      conf="hadoop23->default"/>
 
     <!-- Dependencies for Hadoop 1.0.0 -->
     <dependency org="org.apache.hadoop" name="hadoop-core"
       rev="${hadoop.version}" conf="hadoop100->default"/>
     <dependency org="org.apache.hadoop" name="hadoop-test"
       rev="${hadoop.version}" conf="hadoop100test->default"/>
+    <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
+      conf="hadoop100->default"/>
+    <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
+      conf="hadoop100->default"/>
 
     <!-- Dependencies for Hadoop 0.20 -->
     <dependency org="org.apache.hadoop" name="hadoop-core"
       rev="${hadoop-core.cloudera.version}" conf="hadoop20->default; hadoop23mr1test->default"/>
     <dependency org="org.apache.hadoop" name="hadoop-test"
       rev="${hadoop-core.cloudera.version}" conf="hadoop20test->default; hadoop23mr1test->default"/>
+    <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
+      conf="hadoop20->default"/>
+    <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
+      conf="hadoop20->default"/>
 
     <!-- Common dependencies for Sqoop -->
     <dependency org="commons-cli" name="commons-cli"
