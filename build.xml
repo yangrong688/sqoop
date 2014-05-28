@@ -1366,7 +1366,13 @@
       pattern="${build.ivy.lib.dir}/${ivy.artifact.retrieve.pattern}" sync="true" />
     <ivy:cachepath pathid="${name}.common.classpath" conf="common" />
   </target>
+<target name="ivy-resolve-source" depends="ivy-init">
+    <ivy:resolve settingsRef="${name}.ivy.settings" transitive="false" conf="default,common" />
+  </target>
 
+<target name="ivy-get-sources" depends="ivy-resolve-source" description="Fetch JARs with source codes for libraries that have them">
+<ivy:retrieve pattern="libsources/[artifact]-[type]-[revision].[ext]" type="source" />
+</target>
 
   <!-- retrieve ivy-managed artifacts for the test configuration -->
   <target name="ivy-resolve-test" depends="ivy-init">

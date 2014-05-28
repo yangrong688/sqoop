@@ -78,7 +78,9 @@ under the License.
 
     <!-- configuration for running rat -->
     <conf name="releaseaudit" visibility="private" />
-  </configurations>
+    <conf name="sources" description="get source code for dependencies" /> 
+
+ </configurations>
 
   <publications>
     <!--get the artifact from our module name-->
@@ -101,9 +103,9 @@ under the License.
     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core"
       rev="${hadoop.version}" conf="hadoop210->default"/>
     <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
-      conf="hadoop210->default"/>
+      conf="hadoop210->default,sources"/>
     <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
-      conf="hadoop210->default"/>
+      conf="hadoop210->default,sources"/>
 
     <!-- Dependencies for Hadoop 2.0.0 -->
     <dependency org="org.apache.hadoop" name="hadoop-common"
@@ -121,9 +123,9 @@ under the License.
     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core"
       rev="${hadoop.version}" conf="hadoop200->default"/>
     <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
-      conf="hadoop200->default"/>
+      conf="hadoop200->default,sources"/>
     <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
-      conf="hadoop200->default"/>
+      conf="hadoop200->default,sources"/>
 
     <!-- Dependencies for Hadoop 0.23 -->
     <dependency org="org.apache.hadoop" name="hadoop-common"
@@ -141,9 +143,9 @@ under the License.
     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core"
       rev="${hadoop.version}" conf="hadoop23->default"/>
     <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
-      conf="hadoop23->default"/>
+      conf="hadoop23->default,sources"/>
     <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
-      conf="hadoop23->default"/>
+      conf="hadoop23->default,sources"/>
 
     <!-- Dependencies for Hadoop 1.0.0 -->
     <dependency org="org.apache.hadoop" name="hadoop-core"
@@ -151,9 +153,9 @@ under the License.
     <dependency org="org.apache.hadoop" name="hadoop-test"
       rev="${hadoop.version}" conf="hadoop100test->default"/>
     <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
-      conf="hadoop100->default"/>
+      conf="hadoop100->default,sources"/>
     <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
-      conf="hadoop100->default"/>
+      conf="hadoop100->default,sources"/>
 
     <!-- Dependencies for Hadoop 0.20 -->
     <dependency org="org.apache.hadoop" name="hadoop-core"
@@ -161,28 +163,28 @@ under the License.
     <dependency org="org.apache.hadoop" name="hadoop-test"
       rev="${hadoop-core.cloudera.version}" conf="hadoop20test->default; hadoop23mr1test->default"/>
     <dependency org="org.aspectj" name="aspectjtools" rev="${aspectj.version}"
-      conf="hadoop20->default"/>
+      conf="hadoop20->default,sources"/>
     <dependency org="org.aspectj" name="aspectjrt" rev="${aspectj.version}"
-      conf="hadoop20->default"/>
+      conf="hadoop20->default,sources"/>
 
     <!-- Common dependencies for Sqoop -->
     <dependency org="commons-cli" name="commons-cli"
-      rev="${commons-cli.version}" conf="common->default"/>
+      rev="${commons-cli.version}" conf="common->default,sources"/>
     <dependency org="commons-logging" name="commons-logging"
-      rev="${commons-logging.version}" conf="common->default"/>
+      rev="${commons-logging.version}" conf="common->default,sources"/>
     <dependency org="log4j" name="log4j" rev="${log4j.version}"
       conf="common->master" />
     <dependency org="junit" name="junit" rev="${junit.version}"
-      conf="test->default"/>
+      conf="test->default,sources"/>
     <!-- We're only using H2 for tests as it supports stored
          procedures; once we move to HSQLDB 2.x we can drop
          this -->
     <dependency org="com.h2database" name="h2" rev="${h2.version}"
-      conf="test->default"/>
+      conf="test->default,sources"/>
     <dependency org="hsqldb" name="hsqldb" rev="${hsqldb.version}"
-      conf="common->default;redist->default"/>
+      conf="common->default,sources;redist->default,sources"/>
     <dependency org="commons-io" name="commons-io" rev="${commons-io.version}"
-      conf="common->default;redist->default"/>
+      conf="common->default,sources;redist->default,sources"/>
     <dependency org="org.apache.avro" name="avro" rev="${avro.version}"
       conf="common->default;redist->default">
       <exclude org="org.slf4j" module="slf4j-api"/>
@@ -201,14 +203,14 @@ under the License.
 
     <!-- dependencies for static analysis -->
     <dependency org="checkstyle" name="checkstyle" rev="${checkstyle.version}"
-      conf="checkstyle->default" />
+      conf="checkstyle->default,sources" />
 
     <dependency org="com.google.code.p.arat" name="rat-lib"
-          rev="${rats-lib.version}" conf="releaseaudit->default" />
+          rev="${rats-lib.version}" conf="releaseaudit->default,sources" />
     <dependency org="commons-lang" name="commons-lang"
-      rev="${commons-lang.version}" conf="releaseaudit->default"/>
+      rev="${commons-lang.version}" conf="releaseaudit->default,sources"/>
     <dependency org="commons-collections" name="commons-collections"
-      rev="${commons-collections.version}" conf="releaseaudit->default"/>
+      rev="${commons-collections.version}" conf="releaseaudit->default,sources"/>
 
     <!-- Accumulo 1.5.0 -->
     <dependency org="org.apache.accumulo" name="accumulo-core" rev="1.5.0"
@@ -306,7 +308,7 @@ under the License.
     </dependency>
 
     <dependency org="org.postgresql" name="postgresql"
-      rev="${postgresql.version}" conf="common->default" />
+      rev="${postgresql.version}" conf="common->default,sources" />
 
     <exclude org="org.apache.hadoop" module="avro"/>
     <exclude org="commons-daemon" module="commons-daemon" />
