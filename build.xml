@@ -230,7 +230,7 @@
   <property name="oldversion" value="1.4.4" />
   <!-- The point when we branched for the previous release. -->
   <property name="prev.git.hash"
-      value="166417fdb0afd3141c6fd0fdc50043b5e13c2a97" />
+      value="81624ddf3c8ca5834ab015ebafc8b8649ac36ab7" />
 
   <property name="artifact.name" value="${name}-${version}" />
   <property name="dest.jar" value="${artifact.name}.jar" />
