@@ -12,6 +12,8 @@ zookeeper.version=org.apache.zookeeper:zookeeper.version
 
 avro.version=org.apache.avro:avro.version
 
+kite-data.version=org.kitesdk:kite-data-core.version
+
 # Default build profiles for CDH
 hadoopversion=200
 hbaseprofile=95

@@ -91,7 +91,7 @@
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>ant-contrib</groupId>
       <artifactId>ant-contrib</artifactId>
@@ -102,7 +102,11 @@
       <artifactId>avro-mapred</artifactId>
       <classifier>hadoop2</classifier>
     </dependency>
-    
+
+    <dependency>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-core</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

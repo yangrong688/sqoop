@@ -54,3 +54,4 @@ snappy.version=1.0.3.2
 
 avro.version=org.apache.avro:avro.version
 
+kite-data.version=org.kitesdk:kite-data-core.version
