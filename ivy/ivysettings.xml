@@ -71,6 +71,10 @@ under the License.
         m2compatible="true" checkmodified="true" changingPattern=".*SNAPSHOT"/>
     <ibiblio name="cloudera-snapshot" root="${snapshots.cloudera.com}"
         m2compatible="true" checkmodified="true" changingPattern=".*SNAPSHOT"/>
+    <ibiblio name="pentaho" root="http://repository.pentaho.org/artifactory/repo/"
+        pattern="${maven2.pattern.ext}" m2compatible="true"/>
+    <ibiblio name="springsource" root="http://repo.springsource.org/libs-release-remote/"
+        pattern="${maven2.pattern.ext}" m2compatible="true"/>
 
     <filesystem name="fs" m2compatible="true">
        <artifact pattern="${repo.dir}/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"/>
@@ -88,6 +92,8 @@ under the License.
       <resolver ref="cloudera-releases"/>
       <resolver ref="cloudera-snapshot"/>
       <resolver ref="maven2"/>
+      <resolver ref="pentaho"/>
+      <resolver ref="springsource"/>
     </chain>
 
     <chain name="internal" dual="true">
