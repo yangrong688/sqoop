@@ -96,6 +96,7 @@ under the License.
       <resolver ref="maven2"/>
       <resolver ref="pentaho"/>
       <resolver ref="springsource"/>
+      <resolver ref="conjars"/>
     </chain>
 
     <chain name="internal" dual="true">
