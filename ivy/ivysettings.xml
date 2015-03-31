@@ -86,12 +86,9 @@ under the License.
     <chain name="default" dual="true" checkmodified="true"
         changingPattern=".*SNAPSHOT">
       <resolver ref="fs"/>
-      <resolver ref="apache-snapshot"/>
       <resolver ref="datanucleus"/>
       <resolver ref="cloudera-releases"/>
       <resolver ref="reactor-repo"/>
-      <resolver ref="apache-snapshot"/>
-      <resolver ref="cloudera-releases"/>
       <resolver ref="cloudera-snapshot"/>
       <resolver ref="maven2"/>
       <resolver ref="pentaho"/>
@@ -102,7 +99,6 @@ under the License.
     <chain name="internal" dual="true">
       <resolver ref="reactor-repo"/>
       <resolver ref="fs"/>
-      <resolver ref="apache-snapshot"/>
       <resolver ref="datanucleus"/>
       <resolver ref="cloudera-releases"/>
       <resolver ref="maven2"/>
