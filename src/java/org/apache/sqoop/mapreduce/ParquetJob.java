@@ -52,9 +52,9 @@ public final class ParquetJob {
    * {@link org.apache.avro.generic.GenericRecord}.
    */
   public static void configureImportJob(Configuration conf, Schema schema,
-      String uri, boolean reuseExistingDataset) throws IOException {
+      String uri, boolean reuseExistingDataset, boolean overwrite) throws IOException {
     Dataset dataset;
-    if (reuseExistingDataset) {
+    if (reuseExistingDataset || overwrite) {
       try {
         dataset = Datasets.load(uri);
       } catch (DatasetNotFoundException ex) {
@@ -70,7 +70,12 @@ public final class ParquetJob {
       dataset = createDataset(schema, uri);
     }
     conf.set(CONF_AVRO_SCHEMA, schema.toString());
-    DatasetKeyOutputFormat.configure(conf).writeTo(dataset);
+
+    if (overwrite) {
+      DatasetKeyOutputFormat.configure(conf).overwrite(dataset);
+    } else {
+      DatasetKeyOutputFormat.configure(conf).writeTo(dataset);
+    }
   }
 
   private static Dataset createDataset(Schema schema, String uri) {
