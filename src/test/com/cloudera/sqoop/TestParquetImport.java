@@ -209,8 +209,8 @@ public class TestParquetImport extends ImportJobTestCase {
   private void checkField(Field field, String name, Type type) {
     assertEquals(name, field.name());
     assertEquals(Type.UNION, field.schema().getType());
-    assertEquals(type, field.schema().getTypes().get(0).getType());
-    assertEquals(Type.NULL, field.schema().getTypes().get(1).getType());
+    assertEquals(Type.NULL, field.schema().getTypes().get(0).getType());
+    assertEquals(type, field.schema().getTypes().get(1).getType());
   }
 
 }
