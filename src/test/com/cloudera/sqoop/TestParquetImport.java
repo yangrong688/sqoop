@@ -110,7 +110,7 @@ public class TestParquetImport extends ImportJobTestCase {
     DatasetReader<GenericRecord> reader = getReader();
     try {
       GenericRecord record1 = reader.next();
-      //assertNull(record1);
+      assertNotNull(record1);
       assertEquals("DATA_COL0", true, record1.get("DATA_COL0"));
       assertEquals("DATA_COL1", 100, record1.get("DATA_COL1"));
       assertEquals("DATA_COL2", 200L, record1.get("DATA_COL2"));
@@ -122,6 +122,7 @@ public class TestParquetImport extends ImportJobTestCase {
       ByteBuffer b = ((ByteBuffer) object);
       assertEquals((byte) 1, b.get(0));
       assertEquals((byte) 2, b.get(1));
+      assertFalse(reader.hasNext());
     } finally {
       reader.close();
     }
@@ -143,8 +144,10 @@ public class TestParquetImport extends ImportJobTestCase {
 
     DatasetReader<GenericRecord> reader = getReader();
     try {
+      assertTrue(reader.hasNext());
       GenericRecord record1 = reader.next();
       assertEquals("DATA_COL0", "10", record1.get("DATA_COL0"));
+      assertFalse(reader.hasNext());
     } finally {
       reader.close();
     }
@@ -166,8 +169,10 @@ public class TestParquetImport extends ImportJobTestCase {
 
     DatasetReader<GenericRecord> reader = getReader();
     try {
+      assertTrue(reader.hasNext());
       GenericRecord record1 = reader.next();
       assertEquals("__NAME", 1987, record1.get("__NAME"));
+      assertFalse(reader.hasNext());
     } finally {
       reader.close();
     }
@@ -182,8 +187,10 @@ public class TestParquetImport extends ImportJobTestCase {
 
     DatasetReader<GenericRecord> reader = getReader();
     try {
+      assertTrue(reader.hasNext());
       GenericRecord record1 = reader.next();
       assertNull(record1.get("DATA_COL0"));
+      assertFalse(reader.hasNext());
     } finally {
       reader.close();
     }
@@ -239,6 +246,15 @@ public class TestParquetImport extends ImportJobTestCase {
   private Dataset<GenericRecord> getDataset() {
     String uri = "dataset:file:" + getTablePath();
     return Datasets.load(uri, GenericRecord.class);
+  }
+
+  @Override
+  public void tearDown() {
+    super.tearDown();
+    String uri = "dataset:file:" + getTablePath();
+    if (Datasets.exists(uri)) {
+      Datasets.delete(uri);
+    }
   }
 
   private void checkField(Field field, String name, Type type) {
