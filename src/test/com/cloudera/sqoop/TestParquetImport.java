@@ -189,6 +189,41 @@ public class TestParquetImport extends ImportJobTestCase {
     }
   }
 
+  public void testIncrementalParquetImport() throws IOException, SQLException {
+    String [] types = { "INT" };
+    String [] vals = { "1" };
+    createTableWithColTypes(types, vals);
+
+    runImport(getOutputArgv(true, null));
+    runImport(getOutputArgv(true, new String[]{"--append"}));
+
+    DatasetReader<GenericRecord> reader = getReader();
+    try {
+      assertTrue(reader.hasNext());
+      GenericRecord record1 = reader.next();
+      assertEquals(1, record1.get("DATA_COL0"));
+      record1 = reader.next();
+      assertEquals(1, record1.get("DATA_COL0"));
+      assertFalse(reader.hasNext());
+    } finally {
+      reader.close();
+    }
+  }
+
+  public void testOverwriteParquetDatasetFail() throws IOException, SQLException {
+    String [] types = { "INT" };
+    String [] vals = {};
+    createTableWithColTypes(types, vals);
+
+    runImport(getOutputArgv(true, null));
+    try {
+      runImport(getOutputArgv(true, null));
+      fail("");
+    } catch (IOException ex) {
+      // ok
+    }
+  }
+
   private CompressionType getCompressionType() {
     return getDataset().getDescriptor().getCompressionType();
   }
