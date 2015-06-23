@@ -27,7 +27,7 @@
   
   <groupId>com.cloudera.cdh</groupId>
   <artifactId>sqoop-root</artifactId>
-  <version>1.4.5-cdh5.3.5-SNAPSHOT</version>
+  <version>1.4.5-cdh5.3.6-SNAPSHOT-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>CDH Sqoop root</name>
