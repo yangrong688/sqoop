@@ -50,7 +50,7 @@ public class JobBase {
   public static final Log LOG = LogFactory.getLog(JobBase.class.getName());
 
   public static final String SERIALIZE_SQOOPOPTIONS = "sqoop.jobbase.serialize.sqoopoptions";
-  public static final boolean SERIALIZE_SQOOPOPTIONS_DEFAULT = false;
+  public static final boolean SERIALIZE_SQOOPOPTIONS_DEFAULT = true;
 
   protected SqoopOptions options;
   protected Class<? extends Mapper> mapperClass;

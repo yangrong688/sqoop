@@ -45,6 +45,11 @@ if [ -z "${HADOOP_COMMON_HOME}" ]; then
     HADOOP_COMMON_HOME=${HADOOP_HOME}
   else
     if [ -d "/usr/lib/hadoop" ]; then
+      if [ ! -f "/usr/lib/hadoop/bin/hadoop" ]; then
+        echo "ERROR: Detected incomplete Hadoop installation in /usr/lib/hadoop. This is likely because you have not removed packages in a parcel environment, or you have a leftover /usr/lib/hadoop directory. If you are using parcels, please remove the /usr/lib/hadoop directory."
+        exit 1
+      fi
+
       HADOOP_COMMON_HOME=/usr/lib/hadoop
     else
       HADOOP_COMMON_HOME=${SQOOP_HOME}/../hadoop

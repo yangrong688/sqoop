@@ -31,6 +31,26 @@
     </classpath>
   </taskdef>
 
+ <!-- Initializes ivy/libraries.properties and build.properties with CDH versions -->
+ <if>
+   <and>
+     <not>
+       <isset property="cdh.maven" />
+     </not>
+     <not>
+       <available file="${basedir}/cdh.build.properties" />
+     </not>
+   </and>
+   <then>
+     <exec  executable="mvn" dir="${basedir}" failonerror="true">
+       <arg value="-f" />
+       <arg value="cloudera-pom.xml" />
+        <arg value="process-resources"/>
+     </exec>
+   </then>
+ </if>
+ <property file="${basedir}/cdh.build.properties" />
+
   <!-- Set default Hadoop version if not set -->
   <if>
     <isset property="hadoopversion" />
@@ -197,7 +217,9 @@
        the user, to avoid needing to override with -D. -->
   <property file="${user.home}/build.properties" />
   <property file="${basedir}/build.properties" />
-
+ 
+  <!-- used to mark if we're testing against mr1 -->
+  <property name="mr1.test" value="" />
   <!-- some basic properties -->
   <property environment="env"/>
   <property name="name" value="sqoop" />
@@ -262,7 +284,7 @@
   <property name="relnotes.filename"
       location="${build.relnotes.dir}/sqoop-${version}.releasenotes.html" />
 
-  <property name="bin.artifact.name" value="${artifact.name}.bin__hadoop-${hadoop.version.full}" />
+  <property name="bin.artifact.name" value="${artifact.name}" />
   <property name="dist.dir" location="${build.dir}/${bin.artifact.name}" />
   <property name="tar.file" location="${build.dir}/${bin.artifact.name}.tar.gz" />
   <property name="build.docs.timestamp"
@@ -273,8 +295,8 @@
   <property name="src.tar.file" location="${build.dir}/${src.artifact.name}.tar.gz" />
 
   <!-- compilation -->
-  <property name="targetJavaVersion" value="1.6" />
-  <property name="sourceJavaVersion" value="1.6" />
+  <property name="targetJavaVersion" value="1.7" />
+  <property name="sourceJavaVersion" value="1.7" />
   <property name="javac.deprecation" value="off"/>
   <property name="javac.debug" value="on"/>
   <property name="build.encoding" value="ISO-8859-1"/>
@@ -463,7 +485,7 @@
   </path>
 
   <!-- "init" target used for setup purposes. -->
-  <target name="init">
+  <target name="init" depends="jvm-check">
     <!-- Path containing third-party libraries deployed directly with Sqoop.
          This does not include anything that Ivy can retrieve for us.
       -->
@@ -480,6 +502,22 @@
       <path refid="${name}.hadooptest.classpath" />
       <path refid="compile.classpath" />
     </path>
+  </target>
+
+  <!-- JVM version validation -->
+  <target name="jvm-check">
+      <property name="javaVersion" value="1.7"/>
+
+      <property name="requiredJavaVersion" value="xx${javaVersion}"/>
+      <property name="currentJavaVersion" value="xx${java.version}"/>
+      <condition property="jvm.fail">
+          <not>
+              <contains string="${currentJavaVersion}" substring="${requiredJavaVersion}"/>
+          </not>
+      </condition>
+      <fail if="jvm.fail">
+          Incorrect JVM, current = ${java.version}, required ${javaVersion}.
+      </fail>
   </target>
 
   <!-- generate the version information class. -->
@@ -1247,7 +1285,7 @@
     <fail unless="continueOnFailure">Unit tests failed!</fail>
   </target>
 
-  <target name="clean" description="Clean build target files">
+  <target name="clean" depends="jvm-check" description="Clean build target files">
     <delete dir="${build.dir}"/>
   </target>
 
@@ -1436,7 +1474,7 @@
   <!-- retrieve ivy-managed test artifacts from the Hadoop distribution -->
   <target name="ivy-resolve-hadoop-test" depends="ivy-init"
       unless="hadoop.is.local">
-    <ivy:resolve settingsRef="${name}.ivy.settings" conf="hadoop${hadoopversion}test" />
+    <ivy:resolve settingsRef="${name}.ivy.settings" conf="hadoop${hadoopversion}${mr1.test}test" />
   </target>
   <target name="ivy-retrieve-hadoop-test"
       depends="ivy-init,ivy-resolve-hadoop-test">
@@ -1444,7 +1482,7 @@
           pattern="${build.ivy.lib.dir}/${ivy.artifact.retrieve.pattern}"
           sync="true" />
         <ivy:cachepath pathid="${name}.hadooptest.classpath"
-          conf="hadoop${hadoopversion}test" />
+          conf="hadoop${hadoopversion}${mr1.test}test" />
   </target>
 
   <!-- retrieve ivy-managed artifacts for checkstyle -->
