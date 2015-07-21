@@ -1,5 +1,3 @@
-version=org.apache.sqoop:sqoop.version
-sqoop.version=org.apache.sqoop:sqoop.version
 reactor.repo=https://repository.cloudera.com/content/repositories/snapshots
 hadoop-core.cloudera.version=org.apache.hadoop:hadoop-core.version
 hadoop.version=org.apache.hadoop:hadoop-main.version
