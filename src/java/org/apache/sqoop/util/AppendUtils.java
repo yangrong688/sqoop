@@ -281,8 +281,7 @@ public class AppendUtils {
     String timeId = DATE_FORM.format(new Date(System.currentTimeMillis()));
     String jvmName = ManagementFactory.getRuntimeMXBean().getName().replaceAll("@", "_");
     String tempDir = TEMP_IMPORT_ROOT + Path.SEPARATOR + timeId + "_"  + jvmName + "_" + salt;
-    String finalTempDir = tempDir.replaceAll("[^a-zA-Z_]", "_");
-    return new Path(finalTempDir);
+    return new Path(tempDir);
   }
 
 }
