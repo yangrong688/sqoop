@@ -516,10 +516,10 @@ public class TestIncrementalImport extends TestCase {
       args.add("append");
       if (!appendTimestamp) {
         args.add("--check-column");
-        args.add("id");
+        args.add("ID");
       } else {
         args.add("--check-column");
-        args.add("last_modified");
+        args.add("LAST_MODIFIED");
       }
     } else {
       args.add("--incremental");
@@ -528,7 +528,7 @@ public class TestIncrementalImport extends TestCase {
       args.add("LAST_MODIFIED");
     }
     args.add("--columns");
-    args.add("id");
+    args.add("ID");
     args.add("-m");
     args.add("1");
 
@@ -563,10 +563,10 @@ public class TestIncrementalImport extends TestCase {
       args.add("append");
       if (!appendTimestamp) {
         args.add("--check-column");
-        args.add("id");
+        args.add("ID");
       } else {
         args.add("--check-column");
-        args.add("last_modified");
+        args.add("LAST_MODIFIED");
       }
     } else {
       args.add("--incremental");
@@ -1025,7 +1025,7 @@ public class TestIncrementalImport extends TestCase {
     args.add("--last-value");
     args.add(new Timestamp(importWasBefore).toString());
     args.add("--merge-key");
-    args.add("id");
+    args.add("ID");
     conf = newConf();
     options = new SqoopOptions();
     options.setConf(conf);
@@ -1078,7 +1078,7 @@ public class TestIncrementalImport extends TestCase {
     args.add("--last-value");
     args.add(new Timestamp(importWasBefore).toString());
     args.add("--merge-key");
-    args.add("id");
+    args.add("ID");
     conf = newConf();
     options = new SqoopOptions();
     options.setConf(conf);
@@ -1097,7 +1097,7 @@ public class TestIncrementalImport extends TestCase {
 
     List<String> args = getArgListForTable(TABLE_NAME, false, false);
     args.add("--merge-key");
-    args.add("id");
+    args.add("ID");
     createJob(TABLE_NAME, args);
     runJob(TABLE_NAME);
     assertDirOfNumbers(TABLE_NAME, 10);
@@ -1258,7 +1258,7 @@ public class TestIncrementalImport extends TestCase {
 		args.add("--incremental");
 		args.add("append");
 		args.add("--check-column");
-		args.add("id");
+		args.add("ID");
 		args.add("-m");
 		args.add("1");
 		createJob(TABLE_NAME, args, conf);
