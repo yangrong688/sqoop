@@ -36,6 +36,7 @@ import org.apache.hadoop.fs.PathFilter;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.sqoop.lib.BlobRef;
 import org.apache.sqoop.lib.ClobRef;
+import org.apache.sqoop.orm.ClassWriter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -105,7 +106,8 @@ public final class AvroUtil {
    * Convert Column name into Avro column name.
    */
   public static String toAvroColumn(String column) {
-    return toAvroIdentifier(column);
+    String candidate = ClassWriter.toJavaIdentifier(column);
+    return toAvroIdentifier(candidate);
   }
 
   /**
