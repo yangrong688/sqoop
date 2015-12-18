@@ -53,3 +53,7 @@ fi
 ${ANT} test -Dthirdparty=true -Dsqoop.thirdparty.lib.dir=${THIRDPARTY_LIBS} \
     -Dtest.junit.output.format=xml -Divy.home=$IVY_HOME \
     -Dhadoop.dist=${TEST_HADOOP_DIST} ${ANT_ARGUMENTS}
+
+# If we got at this point, then all tests were executed properly (but might have failed), so we return success
+# and let jenkins turn the job status to yellow if there are test failures
+exit 0
