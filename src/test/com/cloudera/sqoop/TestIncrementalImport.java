@@ -1237,7 +1237,7 @@ public class TestIncrementalImport extends TestCase {
 		args.add("--incremental");
 		args.add("append");
 		args.add("--check-column");
-		args.add("id");
+		args.add("ID");
 		args.add("-m");
 		args.add("1");
 		createJob(TABLE_NAME, args, conf);
