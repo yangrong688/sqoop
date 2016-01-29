@@ -47,6 +47,20 @@ public class AvroSchemaGenerator {
   public static final Log LOG =
       LogFactory.getLog(AvroSchemaGenerator.class.getName());
 
+  /**
+   * Map precision to the number bytes needed for binary conversion.
+   * @see <a href="https://github.com/apache/hive/blob/release-1.1/ql/src/java/org/apache/hadoop/hive/ql/io/parquet/serde/ParquetHiveSerDe.java#L90">Apache Hive</a>.
+   */
+  public static final int MAX_PRECISION = 38;
+  public static final int PRECISION_TO_BYTE_COUNT[] = new int[MAX_PRECISION];
+  static {
+    for (int prec = 1; prec <= MAX_PRECISION; prec++) {
+      // Estimated number of bytes needed.
+      PRECISION_TO_BYTE_COUNT[prec - 1] = (int)
+          Math.ceil((Math.log(Math.pow(10, prec) - 1) / Math.log(2) + 1) / 8);
+    }
+  }
+
   private final SqoopOptions options;
   private final ConnManager connManager;
   private final String tableName;
