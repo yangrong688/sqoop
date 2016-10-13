@@ -227,6 +227,9 @@ public abstract class BaseSqoopTool extends com.cloudera.sqoop.tool.SqoopTool {
 
   public static final String AUTORESET_TO_ONE_MAPPER = "autoreset-to-one-mapper";
 
+  static final String HIVE_IMPORT_WITH_LASTMODIFIED_NOT_SUPPORTED = "--incremental lastmodified option for hive imports is not "
+      + "supported. Please remove the parameter --incremental lastmodified.";
+
 
   public BaseSqoopTool() {
   }
@@ -1396,6 +1399,11 @@ public abstract class BaseSqoopTool extends com.cloudera.sqoop.tool.SqoopTool {
         && options.getFileLayout() == SqoopOptions.FileLayout.SequenceFile) {
       throw new InvalidOptionsException("Hive import is not compatible with "
         + "importing into SequenceFile format.");
+    }
+
+    if (options.doHiveImport()
+        && options.getIncrementalMode().equals(IncrementalMode.DateLastModified)) {
+      throw new InvalidOptionsException(HIVE_IMPORT_WITH_LASTMODIFIED_NOT_SUPPORTED);
     }
 
     if (options.doHiveImport()
