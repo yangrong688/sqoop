@@ -51,6 +51,8 @@ import com.cloudera.sqoop.tool.SqoopTool;
 import com.cloudera.sqoop.util.RandomHash;
 import com.cloudera.sqoop.util.StoredAsProperty;
 
+import static org.apache.sqoop.Sqoop.SQOOP_RETHROW_PROPERTY;
+
 /**
  * Configurable state used by Sqoop tools.
  */
@@ -110,6 +112,10 @@ public class SqoopOptions implements Cloneable {
   @StoredAsProperty("verbose") private boolean verbose;
 
   @StoredAsProperty("temporary.dirRoot") private String tempRootDir;
+
+  // If this property is set, always throw an exception during a job, do not just
+  // exit with status 1.
+  @StoredAsProperty("sqoop.throwOnError") private boolean throwOnError;
 
   @StoredAsProperty("mapreduce.job.name") private String mapreduceJobName;
 
@@ -1015,6 +1021,11 @@ public class SqoopOptions implements Cloneable {
     //to support backward compatibility. Do not exchange it with
     //org.apache.sqoop.tool.BaseSqoopTool#TEMP_ROOTDIR_ARG
     this.tempRootDir = System.getProperty(OLD_SQOOP_TEST_IMPORT_ROOT_DIR, "_sqoop");
+
+    //This default value is set intentionally according to SQOOP_RETHROW_PROPERTY system property
+    //to support backward compatibility. Do not exchange it.
+    this.throwOnError = isSqoopRethrowSystemPropertySet();
+
     this.isValidationEnabled = false; // validation is disabled by default
     this.validatorClass = RowCountValidator.class;
     this.validationThresholdClass = AbsoluteValidationThreshold.class;
@@ -1026,6 +1037,15 @@ public class SqoopOptions implements Cloneable {
 
     // set default transaction isolation level to TRANSACTION_READ_UNCOMMITED
     this.metadataTransactionIsolationLevel = Connection.TRANSACTION_READ_COMMITTED;
+  }
+
+  /**
+   * The SQOOP_RETHROW_PROPERTY system property is considered to be set if it is set to
+   * any kind of String value, i.e. it is not null.
+   */
+  // Type of SQOOP_RETHROW_PROPERTY is String only to provide backward compatibility.
+  public static boolean isSqoopRethrowSystemPropertySet() {
+    return (System.getProperty(SQOOP_RETHROW_PROPERTY) != null);
   }
 
   /**
@@ -1127,6 +1147,14 @@ public class SqoopOptions implements Cloneable {
 
   public void setTempRootDir(String tempRootDir) {
     this.tempRootDir = tempRootDir;
+  }
+
+  public boolean isThrowOnError() {
+    return throwOnError;
+  }
+
+  public void setThrowOnError(boolean throwOnError) {
+    this.throwOnError = throwOnError;
   }
 
   /**
