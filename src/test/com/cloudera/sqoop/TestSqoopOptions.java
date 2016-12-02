@@ -46,6 +46,18 @@ import static org.junit.Assert.assertThat;
 @RunWith(JUnit4.class)
 public class TestSqoopOptions extends TestCase {
 
+  private Properties originalSystemProperties;
+
+  @Before
+  public void setup() {
+   originalSystemProperties = System.getProperties();
+  }
+
+  @After
+  public void tearDown() {
+    System.setProperties(originalSystemProperties);
+  }
+
   // tests for the toChar() parser
   @Test
   public void testNormalChar() throws Exception {
@@ -481,6 +493,64 @@ public class TestSqoopOptions extends TestCase {
   }
 
   @Test
+  public void testDefaultThrowOnErrorWithNotSetSystemProperty() {
+    System.clearProperty(SQOOP_RETHROW_PROPERTY);
+    SqoopOptions opts = new SqoopOptions();
+    assertFalse(opts.isThrowOnError());
+  }
+
+  @Test
+  public void testDefaultThrowOnErrorWithSetSystemProperty() {
+    String testSqoopRethrowProperty = "";
+    System.setProperty(SQOOP_RETHROW_PROPERTY, testSqoopRethrowProperty);
+    SqoopOptions opts = new SqoopOptions();
+
+    assertTrue(opts.isThrowOnError());
+  }
+
+  @Test
+  public void testDefaultLoadedThrowOnErrorWithNotSetSystemProperty() {
+    System.clearProperty(SQOOP_RETHROW_PROPERTY);
+    SqoopOptions out = new SqoopOptions();
+    Properties props = out.writeProperties();
+    SqoopOptions opts = new SqoopOptions();
+    opts.loadProperties(props);
+
+    assertFalse(opts.isThrowOnError());
+  }
+
+  @Test
+  public void testDefaultLoadedThrowOnErrorWithSetSystemProperty() {
+    String testSqoopRethrowProperty = "";
+    System.setProperty(SQOOP_RETHROW_PROPERTY, testSqoopRethrowProperty);
+    SqoopOptions out = new SqoopOptions();
+    Properties props = out.writeProperties();
+    SqoopOptions opts = new SqoopOptions();
+    opts.loadProperties(props);
+
+    assertTrue(opts.isThrowOnError());
+  }
+
+  @Test
+  public void testThrowOnErrorWithNotSetSystemProperty() throws Exception {
+    System.clearProperty(SQOOP_RETHROW_PROPERTY);
+    String[] args = {"--throw-on-error"};
+    SqoopOptions opts = parse(args);
+
+    assertTrue(opts.isThrowOnError());
+  }
+
+  @Test
+  public void testThrowOnErrorWithSetSystemProperty() throws Exception {
+    String testSqoopRethrowProperty = "";
+    System.setProperty(SQOOP_RETHROW_PROPERTY, testSqoopRethrowProperty);
+    String[] args = {"--throw-on-error"};
+    SqoopOptions opts = parse(args);
+
+    assertTrue(opts.isThrowOnError());
+  }
+
+  @Test
   public void defaultValueOfOracleEscapingDisabledShouldBeFalse() {
     System.clearProperty(SqoopOptions.ORACLE_ESCAPING_DISABLED);
     SqoopOptions opts = new SqoopOptions();
@@ -733,4 +803,5 @@ public class TestSqoopOptions extends TestCase {
       // Expected
     }
   }
+
 }
