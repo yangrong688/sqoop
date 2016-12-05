@@ -56,6 +56,8 @@ import com.cloudera.sqoop.util.StoredAsProperty;
  */
 public class SqoopOptions implements Cloneable {
 
+  public static final String ORACLE_ESCAPING_DISABLED = "sqoop.oracle.escaping.disabled";
+
   private static final String OLD_SQOOP_TEST_IMPORT_ROOT_DIR = "sqoop.test.import.rootDir";
 
   public static final Log LOG = LogFactory.getLog(SqoopOptions.class.getName());
@@ -370,6 +372,9 @@ public class SqoopOptions implements Cloneable {
   private Class validatorClass; // Class for the validator implementation.
   private Class validationThresholdClass; // ValidationThreshold implementation
   private Class validationFailureHandlerClass; // FailureHandler implementation
+
+  @StoredAsProperty(ORACLE_ESCAPING_DISABLED)
+  private boolean oracleEscapingDisabled;
 
   public SqoopOptions() {
     initDefaults(null);
@@ -691,6 +696,10 @@ public class SqoopOptions implements Cloneable {
     if (this.verbose) {
       LoggingUtils.setDebugLevel();
     }
+
+    // Ensuring that oracleEscapingDisabled property is propagated to
+    // the level of Hadoop configuration as well
+    this.setOracleEscapingDisabled(this.isOracleEscapingDisabled());
   }
 
   private void loadPasswordProperty(Properties props) {
@@ -1024,6 +1033,8 @@ public class SqoopOptions implements Cloneable {
     //to support backward compatibility. Do not exchange it with
     //org.apache.sqoop.tool.BaseSqoopTool#TEMP_ROOTDIR_ARG
     this.tempRootDir = System.getProperty(OLD_SQOOP_TEST_IMPORT_ROOT_DIR, "_sqoop");
+    setOracleEscapingDisabled(Boolean.parseBoolean(System.getProperty(ORACLE_ESCAPING_DISABLED, "true")));
+
     this.isValidationEnabled = false; // validation is disabled by default
     this.validatorClass = RowCountValidator.class;
     this.validationThresholdClass = AbsoluteValidationThreshold.class;
@@ -2658,11 +2669,23 @@ public class SqoopOptions implements Cloneable {
     this.customToolOptions = customToolOptions;
   }
 
-    public String getToolName() {
-        return this.toolName;
-    }
+  public String getToolName() {
+    return this.toolName;
+  }
 
-    public void setToolName(String toolName) {
-        this.toolName = toolName;
-    }
+  public void setToolName(String toolName) {
+    this.toolName = toolName;
+  }
+
+  public boolean isOracleEscapingDisabled() {
+    return oracleEscapingDisabled;
+  }
+
+  public void setOracleEscapingDisabled(boolean escapingDisabled) {
+    this.oracleEscapingDisabled = escapingDisabled;
+    // important to have custom setter to ensure option is available through
+    // Hadoop configuration on those places where SqoopOptions is not reachable
+    getConf().setBoolean(ORACLE_ESCAPING_DISABLED, escapingDisabled);
+  }
+
 }
