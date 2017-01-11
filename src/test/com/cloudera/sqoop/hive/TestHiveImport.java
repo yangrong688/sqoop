@@ -26,14 +26,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.cloudera.sqoop.Sqoop;
+import junit.framework.JUnit4TestAdapter;
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.sqoop.avro.AvroSchemaMismatchException;
+import org.apache.sqoop.mapreduce.ParquetJob;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.cloudera.sqoop.SqoopOptions;
@@ -46,17 +53,26 @@ import com.cloudera.sqoop.tool.CreateHiveTableTool;
 import com.cloudera.sqoop.tool.ImportTool;
 import com.cloudera.sqoop.tool.SqoopTool;
 import org.apache.commons.cli.ParseException;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetReader;
 import org.kitesdk.data.Datasets;
+import org.kitesdk.data.Formats;
+import org.kitesdk.data.spi.DefaultConfiguration;
 
 /**
  * Test HiveImport capability after an import to HDFS.
  */
+@RunWith(JUnit4.class)
 public class TestHiveImport extends ImportJobTestCase {
 
   public static final Log LOG = LogFactory.getLog(
       TestHiveImport.class.getName());
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   @Before
   public void setUp() {
@@ -379,6 +395,42 @@ public class TestHiveImport extends ImportJobTestCase {
     verifyHiveDataset(TABLE_NAME, new Object[][] {{"test2", 24, "somestring2"}});
   }
 
+  @Test
+  public void testHiveImportAsParquetWhenTableExistsWithIncompatibleSchema() throws Exception {
+    final String TABLE_NAME = "HIVE_IMPORT_AS_PARQUET_EXISTING_TABLE";
+    setCurTableName(TABLE_NAME);
+    setNumCols(3);
+
+    String [] types = { "VARCHAR(32)", "INTEGER", "DATE" };
+    String [] vals = { "'test'", "42", "'2009-12-31'" };
+    String [] extraArgs = {"--as-parquetfile"};
+
+    createHiveDataSet(TABLE_NAME);
+
+    createTableWithColTypes(types, vals);
+
+    thrown.expect(AvroSchemaMismatchException.class);
+    thrown.expectMessage(ParquetJob.INCOMPATIBLE_AVRO_SCHEMA_MSG + ParquetJob.HIVE_INCOMPATIBLE_AVRO_SCHEMA_MSG);
+
+    SqoopOptions sqoopOptions = getSqoopOptions(getConf());
+    sqoopOptions.setThrowOnError(true);
+    Sqoop sqoop = new Sqoop(new ImportTool(), getConf(), sqoopOptions);
+    sqoop.run(getArgv(false, extraArgs));
+
+  }
+
+  private void createHiveDataSet(String tableName) {
+    Schema dataSetSchema = SchemaBuilder
+        .record(tableName)
+            .fields()
+            .name(getColName(0)).type().nullable().stringType().noDefault()
+            .name(getColName(1)).type().nullable().stringType().noDefault()
+            .name(getColName(2)).type().nullable().stringType().noDefault()
+            .endRecord();
+    String dataSetUri = "dataset:hive:/default/" + tableName;
+    ParquetJob.createDataset(dataSetSchema, Formats.PARQUET.getDefaultCompressionType(), dataSetUri);
+  }
+
   /**
    * Test that records are appended to an existing table.
    */
@@ -658,5 +710,10 @@ public class TestHiveImport extends ImportJobTestCase {
     } catch (IOException ioe) {
       // expected; ok.
     }
+  }
+  
+  //workaround: ant kept falling back to JUnit3
+  public static junit.framework.Test suite() {
+    return new JUnit4TestAdapter(TestHiveImport.class);
   }
 }
