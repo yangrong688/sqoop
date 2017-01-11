@@ -51,6 +51,8 @@ import com.cloudera.sqoop.orm.TableClassName;
 import com.cloudera.sqoop.util.AppendUtils;
 import com.cloudera.sqoop.util.ClassLoaderStack;
 import com.cloudera.sqoop.util.ImportException;
+import org.apache.sqoop.avro.AvroSchemaMismatchException;
+
 
 /**
  * Tool that performs database imports to HDFS.
@@ -58,6 +60,8 @@ import com.cloudera.sqoop.util.ImportException;
 public class ImportTool extends com.cloudera.sqoop.tool.BaseSqoopTool {
 
   public static final Log LOG = LogFactory.getLog(ImportTool.class.getName());
+
+  private static final String IMPORT_FAILED_ERROR_MSG = "Import failed: ";
 
   private CodeGenTool codeGenerator;
 
@@ -77,8 +81,12 @@ public class ImportTool extends com.cloudera.sqoop.tool.BaseSqoopTool {
   }
 
   public ImportTool(String toolName, boolean allTables) {
+    this(toolName, new CodeGenTool(), allTables);
+  }
+
+  public ImportTool(String toolName, CodeGenTool codeGenerator, boolean allTables) {
     super(toolName);
-    this.codeGenerator = new CodeGenTool();
+    this.codeGenerator = codeGenerator;
     this.allTables = allTables;
   }
 
@@ -612,17 +620,20 @@ public class ImportTool extends com.cloudera.sqoop.tool.BaseSqoopTool {
       // Import a single table (or query) the user specified.
       importTable(options, options.getTableName(), hiveImport);
     } catch (IllegalArgumentException iea) {
-        LOG.error("Imported Failed: " + iea.getMessage());
+        LOG.error(IMPORT_FAILED_ERROR_MSG + iea.getMessage());
       rethrowIfRequired(options, iea);
       return 1;
     } catch (IOException ioe) {
-      LOG.error("Encountered IOException running import job: "
-          + StringUtils.stringifyException(ioe));
+      LOG.error(IMPORT_FAILED_ERROR_MSG + StringUtils.stringifyException(ioe));
       rethrowIfRequired(options, ioe);
       return 1;
     } catch (ImportException ie) {
-      LOG.error("Error during import: " + ie.toString());
+      LOG.error(IMPORT_FAILED_ERROR_MSG + ie.toString());
       rethrowIfRequired(options, ie);
+      return 1;
+    } catch (AvroSchemaMismatchException e) {
+      LOG.error(IMPORT_FAILED_ERROR_MSG, e);
+      rethrowIfRequired(options, e);
       return 1;
     } finally {
       destroy(options);
