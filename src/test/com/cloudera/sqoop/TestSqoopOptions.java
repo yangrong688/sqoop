@@ -805,4 +805,19 @@ public class TestSqoopOptions extends TestCase {
     }
   }
 
+  @Test
+  public void testEscapeMapingColumnNames() throws Exception {
+    SqoopOptions opts = new SqoopOptions();
+    // enabled by default
+    assertTrue(opts.getEscapeMappingColumnNamesEnabled());
+
+    String [] args = {
+        "--" + org.apache.sqoop.tool.BaseSqoopTool.ESCAPE_MAPPING_COLUMN_NAMES_ENABLED,
+        "false",
+    };
+
+    opts = parse(args);
+    assertFalse(opts.getEscapeMappingColumnNamesEnabled());
+  }
+
 }
