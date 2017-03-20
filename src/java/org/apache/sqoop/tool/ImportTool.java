@@ -28,17 +28,13 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
-import com.cloudera.sqoop.mapreduce.MergeJob;
-import com.cloudera.sqoop.orm.TableClassName;
-import com.cloudera.sqoop.util.ClassLoaderStack;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.StringUtils;
 
 import com.cloudera.sqoop.SqoopOptions;
@@ -47,10 +43,13 @@ import com.cloudera.sqoop.cli.RelatedOptions;
 import com.cloudera.sqoop.cli.ToolOptions;
 import com.cloudera.sqoop.hive.HiveImport;
 import com.cloudera.sqoop.manager.ImportJobContext;
+import com.cloudera.sqoop.mapreduce.MergeJob;
 import com.cloudera.sqoop.metastore.JobData;
 import com.cloudera.sqoop.metastore.JobStorage;
 import com.cloudera.sqoop.metastore.JobStorageFactory;
+import com.cloudera.sqoop.orm.TableClassName;
 import com.cloudera.sqoop.util.AppendUtils;
+import com.cloudera.sqoop.util.ClassLoaderStack;
 import com.cloudera.sqoop.util.ImportException;
 
 /**
@@ -987,6 +986,11 @@ public class ImportTool extends com.cloudera.sqoop.tool.BaseSqoopTool {
 
       if (in.hasOption(AUTORESET_TO_ONE_MAPPER)) {
         out.setAutoResetToOneMapper(true);
+      }
+
+      if (in.hasOption(ESCAPE_MAPPING_COLUMN_NAMES_ENABLED)) {
+        out.setEscapeMappingColumnNamesEnabled(Boolean.parseBoolean(in.getOptionValue(
+            ESCAPE_MAPPING_COLUMN_NAMES_ENABLED)));
       }
 
       applyIncrementalOptions(in, out);

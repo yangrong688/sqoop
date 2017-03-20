@@ -25,15 +25,16 @@ import junit.framework.TestCase;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.sqoop.manager.oracle.OracleUtils;
-
-import com.cloudera.sqoop.lib.DelimiterSet;
-import com.cloudera.sqoop.tool.ImportTool;
-import com.cloudera.sqoop.testutil.HsqldbTestServer;
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.apache.sqoop.Sqoop.SQOOP_RETHROW_PROPERTY;
+
+import com.cloudera.sqoop.lib.DelimiterSet;
+import com.cloudera.sqoop.testutil.HsqldbTestServer;
+import com.cloudera.sqoop.tool.BaseSqoopTool;
+import com.cloudera.sqoop.tool.ImportTool;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -803,6 +804,21 @@ public class TestSqoopOptions extends TestCase {
     } catch (SqoopOptions.InvalidOptionsException ioe) {
       // Expected
     }
+  }
+
+  @Test
+  public void testEscapeMapingColumnNames() throws Exception {
+    SqoopOptions opts = new SqoopOptions();
+    // enabled by default
+    assertTrue(opts.getEscapeMappingColumnNamesEnabled());
+
+    String [] args = {
+        "--" + org.apache.sqoop.tool.BaseSqoopTool.ESCAPE_MAPPING_COLUMN_NAMES_ENABLED,
+        "false",
+    };
+
+    opts = parse(args);
+    assertFalse(opts.getEscapeMappingColumnNamesEnabled());
   }
 
 }
