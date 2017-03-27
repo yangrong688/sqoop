@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.sqoop.tool.TestBaseSqoopTool;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -130,6 +129,6 @@ public class OracleSpecialCharacterTableImportTest extends ImportJobTestCase {
   }
 
   public static junit.framework.Test suite() {
-    return new JUnit4TestAdapter(TestBaseSqoopTool.class);
+    return new JUnit4TestAdapter(OracleSpecialCharacterTableImportTest.class);
   }
 }
