@@ -24,10 +24,12 @@ import com.cloudera.sqoop.testutil.CommonArgs;
 import com.cloudera.sqoop.testutil.ImportJobTestCase;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import junit.framework.JUnit4TestAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.sqoop.tool.TestBaseSqoopTool;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -127,4 +129,7 @@ public class OracleSpecialCharacterTableImportTest extends ImportJobTestCase {
     assertEquals("hello, world!", output.trim());
   }
 
+  public static junit.framework.Test suite() {
+    return new JUnit4TestAdapter(TestBaseSqoopTool.class);
+  }
 }
