@@ -30,6 +30,7 @@ import org.junit.Before;
 
 import com.cloudera.sqoop.SqoopOptions;
 import com.cloudera.sqoop.TestExport;
+import org.junit.Test;
 
 import junit.framework.AssertionFailedError;
 
@@ -291,4 +292,20 @@ public class OracleExportTest extends TestExport {
         "--update-key", "ID", "--update-mode", "allowinsert", "--oracle-escaping-disabled", "true")));
     verifyExport(TOTAL_RECORDS);
   }
+
+  @Test
+  public void testExportToTableWithNameEndingWithDollarSign() throws IOException, SQLException {
+    testExportToTableWithName("DOLLAR$");
+  }
+
+  @Test
+  public void testExportToTableWithNameContainingDollarSign() throws IOException, SQLException {
+    testExportToTableWithName("FOO$BAR");
+  }
+
+  @Test
+  public void testExportToTableWithNameContainingHashtag() throws IOException, SQLException {
+    testExportToTableWithName("FOO#BAR");
+  }
+
 }
