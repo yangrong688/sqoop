@@ -33,6 +33,8 @@ under the License.
   -->
   <property name="repo.maven.org" value="http://repo1.maven.org/maven2/"
       override="false"/>
+  <property name="repo.jboss.org" value="http://repository.jboss.com/nexus/content/groups/public/"
+      override="false"/>
   <property name="snapshot.apache.org"
       value="https://repository.apache.org/content/repositories/snapshots/"
       override="false"/>
@@ -40,7 +42,10 @@ under the License.
       value="https://repository.cloudera.com/content/repositories/staging/"
       override="false"/>
   <property name="releases.cloudera.com"
-      value="https://repository.cloudera.com/content/repositories/releases/"
+      value="https://repository.cloudera.com/artifactory/cdh-releases-rcs/"
+      override="false"/>
+  <property name="snapshots.cloudera.com"
+      value="https://repository.cloudera.com/artifactory/libs-snapshot-local/"
       override="false"/>
   <property name="www.datanucleus.org"
       value="http://www.datanucleus.org/downloads/maven2/"
@@ -48,59 +53,61 @@ under the License.
   <property name="maven2.pattern"
       value="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier])"/>
   <property name="repo.dir" value="${user.home}/.m2/repository"/>
-  <property name="ivy.cache.dir" value="${user.home}/.ivy2/cache"/>
   <property name="maven2.pattern.ext"  value="${maven2.pattern}.[ext]"/>
   <property name="resolvers" value="default" override="false"/>
-  <settings defaultResolver="${resolvers}"/>
+  <settings defaultResolver="${resolvers}" httpRequestMethod="GET"/>
 
   <resolvers>
+    <!-- CDH build repo, the pattern attribute handles SNAPSHOT artifacts -->
+    <ibiblio name="reactor-repo" root="${reactor.repo}"
+             m2compatible="true"
+             checkmodified="true"
+             pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
     <ibiblio name="maven2" root="${repo.maven.org}"
         pattern="${maven2.pattern.ext}" m2compatible="true"/>
     <ibiblio name="datanucleus" root="${www.datanucleus.org}"
         pattern="${maven2.pattern.ext}" m2compatible="true"/>
     <ibiblio name="cloudera-releases" root="${releases.cloudera.com}"
-        pattern="${maven2.pattern.ext}" m2compatible="true"/>
+        pattern="${maven2.pattern.ext}" m2compatible="true" checkmodified="true" changingPattern=".*SNAPSHOT" />
     <ibiblio name="apache-snapshot" root="${snapshot.apache.org}"
         m2compatible="true" checkmodified="true" changingPattern=".*SNAPSHOT"/>
-    <ibiblio name="cloudera-staging" root="${staging.cloudera.com}"
+    <ibiblio name="cloudera-snapshot" root="${snapshots.cloudera.com}"
         m2compatible="true" checkmodified="true" changingPattern=".*SNAPSHOT"/>
-     <!--Conjars had to be added due to hive's dependency on calcite, which depends on pentaho-aggdesigner-algorithm;5.1.5-jhyde, which is only available in conjars and spring plugins repo -->
-     <ibiblio name="conjars" m2compatible="true" root="http://conjars.org/repo/"/>
+    <ibiblio name="springsource" root="http://repo.springsource.org/libs-release-remote/"
+        pattern="${maven2.pattern.ext}" m2compatible="true"/>
+    <ibiblio name="conjars" root="http://conjars.org/repo"
+        pattern="${maven2.pattern.ext}" m2compatible="true"/>
+    <ibiblio name="jboss-maven2" root="${repo.jboss.org}"
+               pattern="${maven2.pattern.ext}" m2compatible="true"/>
+
     <filesystem name="fs" m2compatible="true">
        <artifact pattern="${repo.dir}/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"/>
        <ivy pattern="${repo.dir}/[organisation]/[module]/[revision]/[module]-[revision].pom"/>
     </filesystem>
 
-    <filesystem name="fs2">
-       <artifact pattern="${ivy.cache.dir}/[organisation]/[module]/jars/[module]-[revision](-[classifier]).[ext]"/>
-       <ivy pattern="${ivy.cache.dir}/[organisation]/[module]/ivy-[revision].xml"/>
-    </filesystem>
-
     <chain name="default" dual="true" checkmodified="true"
         changingPattern=".*SNAPSHOT">
-      <resolver ref="fs2"/>
       <resolver ref="fs"/>
-      <resolver ref="apache-snapshot"/>
       <resolver ref="datanucleus"/>
       <resolver ref="cloudera-releases"/>
-      <resolver ref="cloudera-staging"/>
+      <resolver ref="reactor-repo"/>
+      <resolver ref="cloudera-snapshot"/>
       <resolver ref="maven2"/>
+      <resolver ref="jboss-maven2"/>
+      <resolver ref="springsource"/>
       <resolver ref="conjars"/>
     </chain>
 
     <chain name="internal" dual="true">
-      <resolver ref="fs2"/>
+      <resolver ref="reactor-repo"/>
       <resolver ref="fs"/>
-      <resolver ref="apache-snapshot"/>
       <resolver ref="datanucleus"/>
-      <resolver ref="cloudera-staging"/>
+      <resolver ref="cloudera-releases"/>
       <resolver ref="maven2"/>
-      <resolver ref="conjars"/>
     </chain>
 
     <chain name="external">
       <resolver ref="maven2"/>
-      <resolver ref="conjars"/>
     </chain>
 
   </resolvers>

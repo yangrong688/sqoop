@@ -45,6 +45,11 @@ if [ -z "${HADOOP_COMMON_HOME}" ]; then
     HADOOP_COMMON_HOME=${HADOOP_HOME}
   else
     if [ -d "/usr/lib/hadoop" ]; then
+      if [ ! -f "/usr/lib/hadoop/bin/hadoop" ]; then
+        echo "ERROR: Detected incomplete Hadoop installation in /usr/lib/hadoop. This is likely because you have not removed packages in a parcel environment, or you have a leftover /usr/lib/hadoop directory. If you are using parcels, please remove the /usr/lib/hadoop directory."
+        exit 1
+      fi
+
       HADOOP_COMMON_HOME=/usr/lib/hadoop
     else
       HADOOP_COMMON_HOME=${SQOOP_HOME}/../hadoop
@@ -107,6 +112,9 @@ if [ -z "${ZOOKEEPER_HOME}" ]; then
 fi
 if [ -z "${HIVE_HOME}" ]; then
   if [ -d "/usr/lib/hive" ]; then
+    if [ ! -f "/usr/lib/hive/bin/hive" ]; then
+      echo "WARN: Detected incomplete Hive installation in /usr/lib/hive. This is likely because you have not removed packages in a parcel environment, or you have a leftover /usr/lib/hive directory. If you are using parcels, please remove the /usr/lib/hive directory to allow Sqoop to work with Hive."
+    fi
     export HIVE_HOME=/usr/lib/hive
   elif [ -d ${SQOOP_HOME}/../hive ]; then
     export HIVE_HOME=${SQOOP_HOME}/../hive

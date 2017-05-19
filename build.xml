@@ -31,6 +31,26 @@
     </classpath>
   </taskdef>
 
+ <!-- Initializes ivy/libraries.properties and build.properties with CDH versions -->
+ <if>
+   <and>
+     <not>
+       <isset property="cdh.maven" />
+     </not>
+     <not>
+       <available file="${basedir}/cdh.build.properties" />
+     </not>
+   </and>
+   <then>
+     <exec  executable="mvn" dir="${basedir}" failonerror="true">
+       <arg value="-f" />
+       <arg value="cloudera-pom.xml" />
+        <arg value="process-resources"/>
+     </exec>
+   </then>
+ </if>
+ <property file="${basedir}/cdh.build.properties" />
+
   <!-- Load system-wide and project-wide default properties set by
        the user, to avoid needing to override with -D. -->
   <property file="${user.home}/build.properties" />
@@ -40,7 +60,7 @@
   <property environment="env"/>
   <property name="name" value="sqoop" />
   <property name="Name" value="Sqoop" />
-  <property name="version" value="1.4.7" />
+  <property name="version" value="1.4.7-cdh6.x-SNAPSHOT" />
 
   <!-- Ivy library properties -->
   <property name="ivy.dir" location="${basedir}/ivy" />
@@ -104,7 +124,7 @@
   <property name="relnotes.filename"
       location="${build.relnotes.dir}/sqoop-${version}.releasenotes.html" />
 
-  <property name="bin.artifact.name" value="${artifact.name}.bin__hadoop-${hadoop.version}" />
+  <property name="bin.artifact.name" value="${artifact.name}" />
   <property name="dist.dir" location="${build.dir}/${bin.artifact.name}" />
   <property name="tar.file" location="${build.dir}/${bin.artifact.name}.tar.gz" />
   <property name="build.docs.timestamp"
@@ -313,7 +333,7 @@
   </path>
 
   <!-- "init" target used for setup purposes. -->
-  <target name="init">
+  <target name="init" depends="jvm-check">
     <!-- Path containing third-party libraries deployed directly with Sqoop.
          This does not include anything that Ivy can retrieve for us.
       -->
@@ -330,6 +350,22 @@
       <path refid="${name}.hadooptest.classpath" />
       <path refid="compile.classpath" />
     </path>
+  </target>
+
+  <!-- JVM version validation -->
+  <target name="jvm-check">
+      <property name="javaVersion" value="1.8"/>
+
+      <property name="requiredJavaVersion" value="xx${javaVersion}"/>
+      <property name="currentJavaVersion" value="xx${java.version}"/>
+      <condition property="jvm.fail">
+          <not>
+              <contains string="${currentJavaVersion}" substring="${requiredJavaVersion}"/>
+          </not>
+      </condition>
+      <fail if="jvm.fail">
+          Incorrect JVM, current = ${java.version}, required ${javaVersion}.
+      </fail>
   </target>
 
   <!-- generate the version information class. -->
@@ -733,7 +769,7 @@
     </copy>
     <junit
       printsummary="yes" showoutput="${test.output}"
-      haltonfailure="no" fork="yes" maxmemory="1024m"
+      haltonfailure="no" fork="yes" maxmemory="2048m"
       errorProperty="tests.failed" failureProperty="tests.failed"
       timeout="${test.timeout}"
       dir="${build.test}/data">
@@ -745,7 +781,7 @@
 
       <sysproperty key="test.build.data" value="${build.test}/data"/>
       <sysproperty key="build.test" value="${build.test}"/>
-
+      <sysproperty key="org.apache.hadoop.hbase.shaded.io.netty.packagePrefix" value="org.apache.hadoop.hbase.shaded."/>
       <!-- microsoft sqlserver thirdparty test related properties-->
       <sysproperty key="test.data.dir" value="${basedir}/testdata"/>
       <sysproperty key="ms.datatype.test.data.file.export" value="DatatypeTestData-export-lite.txt"/>
@@ -1122,7 +1158,7 @@
     <fail unless="continueOnFailure">Unit tests failed!</fail>
   </target>
 
-  <target name="clean" description="Clean build target files">
+  <target name="clean" depends="jvm-check" description="Clean build target files">
     <delete dir="${build.dir}"/>
   </target>
 
@@ -1315,10 +1351,10 @@
   </target>
   <target name="ivy-retrieve-hadoop-test"
       depends="ivy-init,ivy-resolve-hadoop-test">
-    <ivy:retrieve settingsRef="${name}.ivy.settings"
+        <ivy:retrieve settingsRef="${name}.ivy.settings"
           pattern="${build.ivy.lib.dir}/${ivy.artifact.retrieve.pattern}"
           sync="true" />
-    <ivy:cachepath pathid="${name}.hadooptest.classpath"
+        <ivy:cachepath pathid="${name}.hadooptest.classpath"
           conf="test" />
   </target>
 

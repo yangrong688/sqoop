@@ -51,7 +51,7 @@ public class JobBase {
   public static final Log LOG = LogFactory.getLog(JobBase.class.getName());
 
   public static final String SERIALIZE_SQOOPOPTIONS = "sqoop.jobbase.serialize.sqoopoptions";
-  public static final boolean SERIALIZE_SQOOPOPTIONS_DEFAULT = false;
+  public static final boolean SERIALIZE_SQOOPOPTIONS_DEFAULT = true;
   public static final String HADOOP_MAP_TASK_MAX_ATTEMTPS =
       "mapreduce.map.maxattempts";
   public static final String HADOOP_REDUCE_TASK_MAX_ATTEMTPS =
