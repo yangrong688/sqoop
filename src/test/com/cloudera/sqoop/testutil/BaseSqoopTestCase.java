@@ -134,6 +134,9 @@ public abstract class BaseSqoopTestCase extends TestCase {
     return manager;
   }
 
+  protected void setManager(ConnManager manager) {
+    this.manager = manager;
+  }
 
   /**
    * @return a connection to the database under test.
@@ -295,13 +298,21 @@ public abstract class BaseSqoopTestCase extends TestCase {
     return "DROP TABLE " + manager.escapeTableName(table) + " IF EXISTS";
   }
 
+  protected void createTableWithColTypesAndNames(String[] colNames,
+                                                 String[] colTypes,
+                                                 String[] vals) {
+    createTableWithColTypesAndNames(getTableName(), colNames, colTypes, vals);
+  }
+
   /**
    * Create a table with a set of columns with their names and add a row of values.
+   * @param newTableName The name of the new table
    * @param colNames Column names
    * @param colTypes the types of the columns to make
    * @param vals the SQL text for each value to insert
    */
-  protected void createTableWithColTypesAndNames(String[] colNames,
+  protected void createTableWithColTypesAndNames(String newTableName,
+                                                 String[] colNames,
                                                  String[] colTypes,
                                                  String[] vals) {
     assert colNames != null;
@@ -315,7 +326,7 @@ public abstract class BaseSqoopTestCase extends TestCase {
 
     try {
       try {
-        dropTableIfExists(getTableName());
+        dropTableIfExists(newTableName);
 
         conn = getManager().getConnection();
 
@@ -326,7 +337,7 @@ public abstract class BaseSqoopTestCase extends TestCase {
           }
         }
 
-        createTableStr = "CREATE TABLE " + manager.escapeTableName(getTableName()) + "(" + columnDefStr + ")";
+        createTableStr = "CREATE TABLE " + manager.escapeTableName(newTableName) + "(" + columnDefStr + ")";
         LOG.info("Creating table: " + createTableStr);
         statement = conn.prepareStatement(
             createTableStr,
@@ -360,7 +371,7 @@ public abstract class BaseSqoopTestCase extends TestCase {
           }
         }
         try {
-          String insertValsStr = "INSERT INTO " + manager.escapeTableName(getTableName()) + "(" + columnListStr + ")"
+          String insertValsStr = "INSERT INTO " + manager.escapeTableName(newTableName) + "(" + columnListStr + ")"
               + " VALUES(" + valueListStr + ")";
           LOG.info("Inserting values: " + insertValsStr);
           statement = conn.prepareStatement(
