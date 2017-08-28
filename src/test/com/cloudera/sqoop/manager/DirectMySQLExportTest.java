@@ -145,10 +145,10 @@ public class DirectMySQLExportTest extends TestExport {
    * Test an authenticated export using mysqlimport.
    */
   public void testAuthExport() throws IOException, SQLException {
-    SqoopOptions options = new SqoopOptions(MySQLAuthTest.AUTH_CONNECT_STRING,
+    SqoopOptions options = new SqoopOptions(mySQLTestUtils.getMySqlConnectString(),
         getTableName());
-    options.setUsername(MySQLAuthTest.AUTH_TEST_USER);
-    options.setPassword(MySQLAuthTest.AUTH_TEST_PASS);
+    options.setUsername(mySQLTestUtils.getUserName());
+    options.setPassword(mySQLTestUtils.getUserPass());
 
     manager = new DirectMySQLManager(options);
 
@@ -187,9 +187,9 @@ public class DirectMySQLExportTest extends TestExport {
 
       // run the export and verify that the results are good.
       runExport(getArgv(true, 10, 10,
-          "--username", MySQLAuthTest.AUTH_TEST_USER,
-          "--password", MySQLAuthTest.AUTH_TEST_PASS,
-          "--connect", MySQLAuthTest.AUTH_CONNECT_STRING));
+          "--username", mySQLTestUtils.getUserName(),
+          "--password", mySQLTestUtils.getUserPass(),
+          "--connect", mySQLTestUtils.getMySqlConnectString()));
       verifyExport(3, connection);
     } catch (SQLException sqlE) {
       LOG.error("Encountered SQL Exception: " + sqlE);
@@ -214,10 +214,10 @@ public class DirectMySQLExportTest extends TestExport {
    * Test an authenticated export using mysqlimport.
    */
   public void testEscapedByExport() throws IOException, SQLException {
-    SqoopOptions options = new SqoopOptions(MySQLAuthTest.AUTH_CONNECT_STRING,
+    SqoopOptions options = new SqoopOptions(mySQLTestUtils.getMySqlConnectString(),
         getTableName());
-    options.setUsername(MySQLAuthTest.AUTH_TEST_USER);
-    options.setPassword(MySQLAuthTest.AUTH_TEST_PASS);
+    options.setUsername(mySQLTestUtils.getUserName());
+    options.setPassword(mySQLTestUtils.getUserPass());
 
     manager = new DirectMySQLManager(options);
 
@@ -269,9 +269,9 @@ public class DirectMySQLExportTest extends TestExport {
 
       // run the export and verify that the results are good.
       runExport(getArgv(true, 10, 10,
-          "--username", MySQLAuthTest.AUTH_TEST_USER,
-          "--password", MySQLAuthTest.AUTH_TEST_PASS,
-          "--connect", MySQLAuthTest.AUTH_CONNECT_STRING,
+          "--username", mySQLTestUtils.getUserName(),
+          "--password", mySQLTestUtils.getUserPass(),
+          "--connect", mySQLTestUtils.getMySqlConnectString(),
           "--escaped-by", "|"));
       verifyExport(3, connection);
       verifyTableColumnContents(connection, tableName, "value", gen);
