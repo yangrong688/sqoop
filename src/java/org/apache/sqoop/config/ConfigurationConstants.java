@@ -72,6 +72,9 @@ public final class ConfigurationConstants {
    */
   public static final String PROP_MAPREDUCE_FRAMEWORK_NAME =
     "mapreduce.framework.name";
+
+  public static final String MAPREDUCE_FRAMEWORK_LOCAL = "local";
+
   /**
    * The group name of task counters.
    */

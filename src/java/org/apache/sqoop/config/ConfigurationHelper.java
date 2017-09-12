@@ -31,6 +31,10 @@ import com.cloudera.sqoop.mapreduce.db.DBConfiguration;
 
 import org.apache.hadoop.util.ReflectionUtils;
 
+import static org.apache.sqoop.config.ConfigurationConstants.MAPREDUCE_FRAMEWORK_LOCAL;
+import static org.apache.sqoop.config.ConfigurationConstants.PROP_MAPREDUCE_FRAMEWORK_NAME;
+import static org.apache.sqoop.config.ConfigurationConstants.PROP_MAPRED_JOB_TRACKER_ADDRESS;
+
 /**
  * This class provides static helper methods that allow access and manipulation
  * of job configuration. It is convenient to keep such access in one place in
@@ -124,7 +128,7 @@ public final class ConfigurationHelper {
    * Sets the Jobtracker address to use for a job.
    */
   public static void setJobtrackerAddr(Configuration conf, String addr) {
-    conf.set(ConfigurationConstants.PROP_MAPRED_JOB_TRACKER_ADDRESS, addr);
+    conf.set(PROP_MAPRED_JOB_TRACKER_ADDRESS, addr);
   }
 
   /**
@@ -233,17 +237,13 @@ public final class ConfigurationHelper {
       return config.getInt(ConfigurationConstants.PROP_SPLIT_LIMIT, -1);
   }
   public static boolean isLocalJobTracker(Configuration conf) {
-    // If framework is set to YARN, then we can't be running in local mode
-    if ("yarn".equalsIgnoreCase(conf
-      .get(ConfigurationConstants.PROP_MAPREDUCE_FRAMEWORK_NAME))) {
-      return false;
-    }
-    String jtAddr = conf
-      .get(ConfigurationConstants.PROP_MAPRED_JOB_TRACKER_ADDRESS);
-    String jtAddr2 = conf
-      .get(ConfigurationConstants.PROP_MAPREDUCE_JOB_TRACKER_ADDRESS);
-    return (jtAddr != null && jtAddr.equals("local"))
-      || (jtAddr2 != null && jtAddr2.equals("local"));
+    // Mapreduce config documentation
+    // http://stackoverflow.com/questions/26687029/what-is-the-difference-between-classic-local-for-mapreduce-framework-name-in-ma
+    // https://hadoop.apache.org/docs/r2.7.2/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml
+    // https://hadoop.apache.org/docs/r3.0.0-alpha1/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml
+
+    String frameworkName = conf.get(PROP_MAPREDUCE_FRAMEWORK_NAME);
+    return MAPREDUCE_FRAMEWORK_LOCAL.equals(frameworkName);
   }
 
   private ConfigurationHelper() {
