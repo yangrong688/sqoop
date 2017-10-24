@@ -17,4 +17,4 @@
 
 BASEDIR=$(dirname "$0")
 
-docker-compose -f $BASEDIR/docker-compose/sqoop-thirdpartytest-db-services.yml rm --stop -f
+docker-compose -f $BASEDIR/docker-compose/sqoop-thirdpartytest-db-services.yml down
