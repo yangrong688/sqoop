@@ -16,7 +16,7 @@
 version: '3'
 services:
   mysql:
-    image: mysql:5.7.19
+    image: docker-registry.infra.cloudera.com/sqoop/mysql:5.7.19
     container_name: sqoop_mysql_container
     environment:
       COMPOSE_HTTP_TIMEOUT: 200
@@ -34,7 +34,7 @@ services:
       timeout: 10s
       retries: 10
   postgresql:
-    image: postgres:9.6.4
+    image: docker-registry.infra.cloudera.com/sqoop/postgres:9.6.4
     container_name: sqoop_postgresql_container
     environment:
       COMPOSE_HTTP_TIMEOUT: 200
@@ -49,7 +49,7 @@ services:
       timeout: 10s
       retries: 10
   mssql:
-    image: microsoft/mssql-server-linux:2017-GA
+    image: docker-registry.infra.cloudera.com/sqoop/microsoft/mssql-server-linux:2017-GA
     container_name: sqoop_mssql_container
     environment:
       COMPOSE_HTTP_TIMEOUT: 200
@@ -63,7 +63,7 @@ services:
       timeout: 10s
       retries: 10
   cubrid:
-    image: cubrid/cubrid:10.0
+    image: docker-registry.infra.cloudera.com/sqoop/cubrid/cubrid:10.0
     container_name: sqoop_cubrid_container
     environment:
       COMPOSE_HTTP_TIMEOUT: 200
@@ -78,7 +78,7 @@ services:
       timeout: 10s
       retries: 10
   oracle:
-    image: oracle/database:12.2.0.1-ee
+    image: docker-registry.infra.cloudera.com/sqoop/oracle/database:12.2.0.1-ee
     container_name: sqoop_oracle_container
     environment:
       COMPOSE_HTTP_TIMEOUT: 200
@@ -94,7 +94,7 @@ services:
       timeout: 10s
       retries: 60
   db2:
-    image: ibmcom/db2express-c:10.5.0.5-3.10.0
+    image: docker-registry.infra.cloudera.com/sqoop/ibmcom/db2express-c:10.5.0.5-3.10.0
     container_name: sqoop_db2_container
     environment:
       COMPOSE_HTTP_TIMEOUT: 200
