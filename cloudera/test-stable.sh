@@ -185,7 +185,7 @@ function setupJavaTarget() {
 
 function setupAntFlags() {
 
- ANT_ARGUMENTS="-DjavaVersion=$JAVA_VERSION -DtargetJavaVersion=$TARGET_JAVA_VERSION -Dmaxmemory=2048m -Djava.security.egd=file:///dev/./urandom -Dsqoop.test.mysql.connectstring.host_url=jdbc:mysql://mysql.vpc.cloudera.com/ -Dsqoop.test.oracle.connectstring=jdbc:oracle:thin:@//oracle-ee.vpc.cloudera.com/orcl -Dsqoop.test.postgresql.connectstring.host_url=jdbc:postgresql://postgresql.vpc.cloudera.com/ -Dsqoop.test.cubrid.connectstring.host_url=jdbc:cubrid:cubrid.vpc.cloudera.com:33000 -Dsqoop.test.cubrid.connectstring.username=sqoop -Dsqoop.test.cubrid.connectstring.database=sqoop -Dsqoop.test.cubrid.connectstring.password=sqoop -Dmapred.child.java.opts=-Djava.security.egd=file:/dev/../dev/urandom -Dtest.timeout=1000000"
+    ANT_ARGUMENTS="-DjavaVersion=$JAVA_VERSION -DtargetJavaVersion=$TARGET_JAVA_VERSION -Dmaxmemory=2048m -Djava.security.egd=file:///dev/./urandom -Dmapred.child.java.opts=-Djava.security.egd=file:/dev/../dev/urandom -Dtest.timeout=1000000 -Dsqoop.test.mysql.connectstring.host_url=jdbc:mysql://127.0.0.1:3306/ -Dsqoop.test.mysql.databasename=sqoop -Dsqoop.test.mysql.password=Sqoop12345 -Dsqoop.test.mysql.username=sqoop -Dsqoop.test.oracle.connectstring=jdbc:oracle:thin:@//localhost:1521/sqoop -Dsqoop.test.oracle.username=SYSTEM -Dsqoop.test.oracle.password=Sqoop12345 -Dsqoop.test.postgresql.connectstring.host_url=jdbc:postgresql://localhost/ -Dsqoop.test.postgresql.database=sqoop -Dsqoop.test.postgresql.username=sqoop -Dsqoop.test.postgresql.password=Sqoop12345 -Dsqoop.test.cubrid.connectstring.host_url=jdbc:cubrid:localhost:33000 -Dsqoop.test.cubrid.connectstring.username=sqoop -Dsqoop.test.cubrid.connectstring.database=sqoop -Dsqoop.test.cubrid.connectstring.password=Sqoop12345 -Dtest.timeout=10000000 -Dsqoop.test.sqlserver.connectstring.host_url=jdbc:sqlserver://localhost:1433 -Dsqoop.test.sqlserver.database=master -Dms.sqlserver.username=sa -Dms.sqlserver.password=Sqoop12345 -Dsqoop.test.db2.connectstring.host_url=jdbc:db2://localhost:50000 -Dsqoop.test.db2.connectstring.database=SQOOP -Dsqoop.test.db2.connectstring.username=DB2INST1 -Dsqoop.test.db2.connectstring.password=Sqoop12345"
 
 }
 
@@ -341,11 +341,11 @@ function initialize() {
 
   # always set the target java version
   setupJavaTarget ${TARGET_JAVA}
-  # if toolchain is defined or specified use it to initialize the environment
-  setupToolChain ${JAVA_VERSION} ${TOOLCHAIN_HOME}
-  export PATH
- echo $PATH
-echo $THIRDPARTY_LIBS
+  setupAntFlags
+
+  export PATH=$JAVA_HOME/bin:$MAVEN3_HOME/bin:${ANT_HOME}/bin:$PATH
+  echo $PATH
+  echo $THIRDPARTY_LIBS
 }
 
 ################################### Main section ###################################
@@ -354,7 +354,9 @@ main() {
   CLOUDERA_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
   NAME=`basename $0`
 
- 
+sudo $CLOUDERA_DIR/../src/scripts/thirdpartytest/stop-thirdpartytest-db-containers.sh
+sudo $CLOUDERA_DIR/../src/scripts/thirdpartytest/start-thirdpartytest-db-containers.sh
+
   # script is passed to ensure arguments are compatible
 initialize $@
 pushd `pwd`/cloudera/maven-packaging >> /dev/null
@@ -384,9 +386,18 @@ if [ "${THIRDPARTY_LIBS}" == "" ]; then
   echo "Warning: $$THIRDPARTY_LIBS not set."
 fi
 
+sudo $CLOUDERA_DIR/wait-for-containers.sh
+
+if [[ $? -ne 0 ]]; then
+    sudo $CLOUDERA_DIR/../src/scripts/thirdpartytest/stop-thirdpartytest-db-containers.sh
+    exit 1
+fi
+
 ${ANT} test -Dthirdparty=true -Dsqoop.thirdparty.lib.dir=${THIRDPARTY_LIBS} \
     -Dtest.junit.output.format=xml -Divy.home=$IVY_HOME \
     -Dhadoop.dist=${TEST_HADOOP_DIST} ${ANT_ARGUMENTS}
+
+sudo $CLOUDERA_DIR/../src/scripts/thirdpartytest/stop-thirdpartytest-db-containers.sh
 
 # If we got at this point, then all tests were executed properly (but might have failed), so we return success
 # and let jenkins turn the job status to yellow if there are test failures
