@@ -32,8 +32,7 @@
 
 
 # Setup Java specific variables like Java options as well as source and target specifiers. Assumes that
-# JAVA7_HOME and optionally JAVA8_HOME is defined. Hence this should only be invoked when TOOLCHAIN_HOME
-# is set.
+# JAVA7_HOME and optionally JAVA8_HOME is defined.
 #
 # Takes the the following arguments
 # JAVA_VERSION - the source version
@@ -115,49 +114,6 @@ function ensureCommand() {
   fi
 }
 
-# Checks if a tool chain has been set. If set then the common environment will be setup.
-# The tool chain is identified by the environment variable TOOLCHAIN_HOME it is expected
-# to contain the necessary tools to produce the build. As a result PATH and other key
-# environment variables will be setup according to the tool chain.
-#
-# Takes two arguments
-# JAVA_VERSION - the source Java compiler
-# TOOLCHAIN_HOME - (Optional) if not empty initialize using the toolchain environment
-function setupToolChain() {
-  local _JAVA_VERSION=$1
-  local _TOOLCHAIN_HOME=$2
-
-  if [[ ${_TOOLCHAIN_HOME} ]];  then
-    echo -----------------------
-    echo Using toolchain environment ${_TOOLCHAIN_HOME}
-    echo -----------------------
-    ensureDirectory ${_TOOLCHAIN_HOME} "TOOLCHAIN_HOME (${_TOOLCHAIN_HOME}) does not exist or is not a directory"
-
-    if [[ -z ${ANT_HOME} ]]; then
-      echo ANT_HOME is not set
-      exit 1
-    fi
-    ensureDirectory ${ANT_HOME} "ANT_HOME (${ANT_HOME}) does not exist or is not a directory"
-
-    if [[ -z ${MAVEN3_HOME} ]]; then
-      echo MAVEN3_HOME is not set
-      exit 1
-    fi
-    ensureDirectory ${MAVEN3_HOME} "MAVEN3_HOME (${MAVEN3_HOME}) does not exist or is not a directory"
-
-    # append MAVEN and ANT to PATH
-    PATH=${MAVEN3_HOME}/bin:${ANT_HOME}/bin:${PATH}:${PROTOC5_HOME}/bin
-
-    setupJava ${_JAVA_VERSION}
-fi
-
-  ensureCommand "javac" "Unable to execute javac (make sure that JAVA_HOME/PATH points to a JDK)"
-  ensureCommand "mvn" "Unable to execute mvn"
-  ensureCommand "ant" "Unable to execute ant"
-
-  setupAntFlags ${_TOOLCHAIN_HOME}
-}
-
 # Setup the Java generated class files for specific VM version.
 # The supported versions include 1.7 & 1.8. If the target version
 # is successful then TARGET_JAVA_VERSION will be setup correctly.
@@ -192,7 +148,7 @@ function setupAntFlags() {
 function printUsage() {
   echo Usage:
   echo "test-stable.sh --java=<1.7(default)|1.8> --target-java=<1.7(default)|1.8> --build=<pom path> --no-build=<true|false(default)>"
-  echo "       --toolchain-home=<toolchain directory> --test-fork-count=<number>"
+  echo "       --test-fork-count=<number>"
   echo "       --test-fork-reuse=<true(default)|false> --test-set=<include-file>"
   echo
   echo "This script is intended to be invoked by one of the proxy scripts: build.sh, test-all.sh, test-code-coverage.sh, "
@@ -298,11 +254,6 @@ function initialize() {
       shift
       ;;
 
-   --toolchain-home=*|--tc-home=*)
-      TOOLCHAIN_HOME="${arg#*=}"
-      shift
-      ;;
-
     --help|-h)
       printUsage
       exit 0
@@ -328,7 +279,7 @@ function initialize() {
  COMPILE_HADOOP_DIST=cloudera
  COBERTURA_HOME=/home/hudson/lib/cobertura
  FINDBUGS_HOME=/home/hudson/lib/findbugs
- THIRDPARTY_LIBS=$TOOLCHAIN_HOME/sqoop-3rdparty
+ THIRDPARTY_LIBS=/sqoop-3rdparty
  TEST_HADOOP_DIST=cloudera
  ZOOKEEPER_HOME=/home/hudson/lib/zookeeper
  HBASE_HOME=/home/hudson/lib/hbase
@@ -343,7 +294,8 @@ function initialize() {
   setupJavaTarget ${TARGET_JAVA}
   setupAntFlags
 
-  export PATH=$JAVA_HOME/bin:$MAVEN3_HOME/bin:${ANT_HOME}/bin:$PATH
+  setupJava ${JAVA_VERSION}
+  export PATH=$MAVEN3_HOME/bin:${ANT_HOME}/bin:$PATH
   echo $PATH
   echo $THIRDPARTY_LIBS
 }
