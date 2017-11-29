@@ -40,6 +40,7 @@ import com.cloudera.sqoop.SqoopOptions;
 import com.cloudera.sqoop.metastore.JobData;
 import com.cloudera.sqoop.metastore.JobStorage;
 import com.cloudera.sqoop.tool.SqoopTool;
+import org.apache.sqoop.metastore.PasswordRedactor;
 
 /**
  * JobStorage implementation that uses an HSQLDB-backed database to
@@ -682,7 +683,7 @@ public class HsqldbJobStorage extends JobStorage {
   private void setV0Property(String jobName, String propClass,
       String propName, String propVal) throws SQLException {
     LOG.debug("Job: " + jobName + "; Setting property "
-        + propName + " with class " + propClass + " => " + propVal);
+        + propName + " with class " + propClass + " => " + PasswordRedactor.redactValue(propName, propVal));
 
     PreparedStatement s = null;
     try {

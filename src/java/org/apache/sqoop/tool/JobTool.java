@@ -42,6 +42,7 @@ import com.cloudera.sqoop.metastore.hsqldb.HsqldbJobStorage;
 import com.cloudera.sqoop.metastore.JobData;
 import com.cloudera.sqoop.metastore.JobStorage;
 import com.cloudera.sqoop.metastore.JobStorageFactory;
+import org.apache.sqoop.metastore.PasswordRedactor;
 import org.apache.sqoop.util.LoggingUtils;
 
 /**
@@ -258,9 +259,9 @@ public class JobTool extends com.cloudera.sqoop.tool.BaseSqoopTool {
 
     System.out.println("Options:");
     System.out.println("----------------------------");
-    Properties props = childOpts.writeProperties();
-    for (Map.Entry<Object, Object> entry : props.entrySet()) {
-      System.out.println(entry.getKey().toString() + " = " + entry.getValue());
+    Map<String, String> props = PasswordRedactor.redactValues(childOpts.writeProperties());
+    for (Map.Entry<String, String> entry : props.entrySet()) {
+      System.out.println(entry.getKey() + " = " + entry.getValue());
     }
 
     // TODO: This does not show entries in the Configuration
