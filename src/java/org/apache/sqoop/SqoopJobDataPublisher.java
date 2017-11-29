@@ -20,6 +20,7 @@ package org.apache.sqoop;
 
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.sqoop.mapreduce.hcat.SqoopHCatUtilities;
+import org.apache.sqoop.metastore.PasswordRedactor;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -127,6 +128,13 @@ public class SqoopJobDataPublisher {
             init("import", options.getConnectString(), UserGroupInformation.getCurrentUser().getShortUserName(),
                     dataStoreType, tableName, options.getSqlQuery(), hiveDatabase, hiveTableName,
                     options.writeProperties(), startTime, endTime);
+        }
+
+        public String toString() {
+            return  "Operation=" + operation + ", Url=" + url + ", User=" + user + ", StoreType=" + storeType
+                    + ", StoreTable=" + storeTable + ", StoreQuery=" + storeQuery + ", HiveDB=" + hiveDB
+                    + ", HiveTable=" + hiveTable + ", StartTime=" + startTime + ", EndTime=" + endTime
+                    + ", CmdLineArgs=" + PasswordRedactor.redactValues(commandLineOpts);
         }
     }
 
