@@ -26,6 +26,7 @@ import java.net.URLDecoder;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -101,6 +102,7 @@ public class SqoopOptions implements Cloneable {
     }
   }
 
+  // SQOOP-2333 please do not remove this field as plugins may rely on it.
   @StoredAsProperty("customtool.options.jsonmap")
   private Map<String, String> customToolOptions;
 
@@ -879,6 +881,14 @@ public class SqoopOptions implements Cloneable {
 
       if (null != mapReplacedColumnJava) {
         other.mapReplacedColumnJava = (Properties) this.mapReplacedColumnJava.clone();
+      }
+
+      if (null != jobStorageDescriptor) {
+        other.jobStorageDescriptor =  new HashMap<>(jobStorageDescriptor);
+      }
+
+      if (null != customToolOptions) {
+        other.customToolOptions =  new HashMap<>(customToolOptions);
       }
 
       return other;
