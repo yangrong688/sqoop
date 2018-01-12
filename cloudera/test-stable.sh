@@ -279,7 +279,9 @@ function initialize() {
  COMPILE_HADOOP_DIST=cloudera
  COBERTURA_HOME=/home/hudson/lib/cobertura
  FINDBUGS_HOME=/home/hudson/lib/findbugs
- THIRDPARTY_LIBS=/sqoop-3rdparty
+ if [[ -z "$THIRDPARTY_LIBS" ]]; then
+     THIRDPARTY_LIBS=/sqoop-3rdparty
+ fi
  TEST_HADOOP_DIST=cloudera
  ZOOKEEPER_HOME=/home/hudson/lib/zookeeper
  HBASE_HOME=/home/hudson/lib/hbase
