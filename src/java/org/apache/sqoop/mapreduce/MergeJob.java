@@ -56,8 +56,8 @@ import org.apache.parquet.hadoop.Footer;
 import org.apache.parquet.hadoop.ParquetFileReader;
 import org.apache.parquet.schema.MessageType;
 
-import com.cloudera.sqoop.SqoopOptions;
-import com.cloudera.sqoop.mapreduce.JobBase;
+import org.apache.sqoop.SqoopOptions;
+import org.apache.sqoop.mapreduce.JobBase;
 import org.apache.sqoop.util.FileSystemUtil;
 
 /**
