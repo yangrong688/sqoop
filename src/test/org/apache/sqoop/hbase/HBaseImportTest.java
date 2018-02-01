@@ -20,6 +20,7 @@ package org.apache.sqoop.hbase;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -72,6 +73,7 @@ public class HBaseImportTest extends HBaseTestCase {
   }
 
   @Test
+  @Ignore
   public void testOverwriteNullColumnsSucceeds() throws IOException {
     // Test that we can create a table and then import immediately
     // back on top of it without problem and then update with null to validate
