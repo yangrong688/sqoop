@@ -62,6 +62,7 @@ public class HiveImport {
   private ConnManager connManager;
   private Configuration configuration;
   private boolean generateOnly;
+  private String previousLog4j2DisableJmxValue;
   private static boolean testMode = false;
 
   public static boolean getTestMode() {
@@ -75,6 +76,8 @@ public class HiveImport {
   /** Entry point through which Hive invocation should be attempted. */
   private static final String HIVE_MAIN_CLASS =
       "org.apache.hadoop.hive.cli.CliDriver";
+
+  private static final String LOG4J2_DISABLE_JMX_KEY = "log4j2.disable.jmx";
 
   public HiveImport(final SqoopOptions opts, final ConnManager connMgr,
       final Configuration conf, final boolean generateOnly) {
@@ -310,6 +313,8 @@ public class HiveImport {
     }
 
     try {
+      setSystemProperties();
+
       Class cliDriverClass = Class.forName(HIVE_MAIN_CLASS);
 
       // We loaded the CLI Driver in this JVM, so we will just
@@ -362,6 +367,26 @@ public class HiveImport {
         // Uninstall the SecurityManager used to trap System.exit().
         subprocessSM.uninstall();
       }
+      resetSystemProperties();
+    }
+  }
+
+  private void setSystemProperties() {
+    // log4j2.disable.jmx has to be set to true otherwise org.apache.hadoop.hive.cli.CliDriver#main 
+    // will throw an AccessControlException saying that an MBean cannot be registered.
+    // See: https://jira.cloudera.com/browse/CDH-64721
+    previousLog4j2DisableJmxValue = System.setProperty(LOG4J2_DISABLE_JMX_KEY, "true");
+  }
+
+  private void resetSystemProperties() {
+    resetSystemProperty(LOG4J2_DISABLE_JMX_KEY, previousLog4j2DisableJmxValue);
+  }
+
+  private void resetSystemProperty(String key, String value) {
+    if (value == null) {
+      System.clearProperty(key);
+    } else {
+      System.setProperty(key, value);
     }
   }
 
