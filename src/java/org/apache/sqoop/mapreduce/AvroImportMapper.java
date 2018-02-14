@@ -29,6 +29,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.sqoop.avro.AvroUtil;
+import org.apache.sqoop.config.ConfigurationConstants;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -45,6 +46,7 @@ public class AvroImportMapper
   private Schema schema;
   private LargeObjectLoader lobLoader;
   private boolean bigDecimalFormatString;
+  private boolean bigDecimalPadding;
 
   @Override
   protected void setup(Context context)
@@ -55,6 +57,7 @@ public class AvroImportMapper
     bigDecimalFormatString = conf.getBoolean(
         ImportJobBase.PROPERTY_BIGDECIMAL_FORMAT,
         ImportJobBase.PROPERTY_BIGDECIMAL_FORMAT_DEFAULT);
+    bigDecimalPadding = conf.getBoolean(ConfigurationConstants.PROP_ENABLE_AVRO_DECIMAL_PADDING, false);
   }
 
   @Override
@@ -68,7 +71,7 @@ public class AvroImportMapper
       throw new IOException(sqlE);
     }
 
-    GenericRecord outKey = AvroUtil.toGenericRecord(val.getFieldMap(), schema, bigDecimalFormatString);
+    GenericRecord outKey = AvroUtil.toGenericRecord(val.getFieldMap(), schema, bigDecimalFormatString, bigDecimalPadding);
     wrapper.datum(outKey);
     context.write(wrapper, NullWritable.get());
   }
