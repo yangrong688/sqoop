@@ -70,7 +70,7 @@ public class NetezzaImportManualTest extends ImportJobTestCase {
   }
 
   @Override
-  protected String getTableName() {
+  public String getTableName() {
     return NetezzaTestUtils.TABLE_NAME + "_IMP_";
   }
 

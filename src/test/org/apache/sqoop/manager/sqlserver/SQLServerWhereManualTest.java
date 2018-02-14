@@ -264,7 +264,7 @@ public class SQLServerWhereManualTest extends ImportJobTestCase {
   return opt;
  }
 
- protected String getTableName() {
+ public String getTableName() {
   return "tpch1m_lineitem";
  }
 }

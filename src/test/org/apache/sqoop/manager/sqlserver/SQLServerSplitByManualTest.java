@@ -208,7 +208,7 @@ public class SQLServerSplitByManualTest extends ImportJobTestCase {
           "jdbc:sqlserver://sqlserverhost:1433");
   }
 
-  protected String getTableName() {
+  public String getTableName() {
     return "tpch1m_lineitem";
   }
 

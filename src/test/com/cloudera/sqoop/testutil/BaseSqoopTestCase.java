@@ -18,14 +18,13 @@
 
 package com.cloudera.sqoop.testutil;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-
+import junit.framework.TestCase;
+import org.apache.sqoop.ConnFactory;
+import com.cloudera.sqoop.SqoopOptions;
+import com.cloudera.sqoop.manager.ConnManager;
+import com.cloudera.sqoop.metastore.JobData;
+import com.cloudera.sqoop.tool.ImportTool;
+import com.google.common.collect.ObjectArrays;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -36,14 +35,13 @@ import org.apache.log4j.BasicConfigurator;
 import org.junit.After;
 import org.junit.Before;
 
-import com.cloudera.sqoop.ConnFactory;
-import com.cloudera.sqoop.SqoopOptions;
-import com.cloudera.sqoop.manager.ConnManager;
-import com.cloudera.sqoop.metastore.JobData;
-import com.cloudera.sqoop.tool.ImportTool;
-import com.google.common.collect.ObjectArrays;
-
-import junit.framework.TestCase;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 /**
  * Class that implements common methods required for tests.
@@ -101,7 +99,7 @@ public abstract class BaseSqoopTestCase extends TestCase {
     return "SQOOP_TABLE_";
   }
 
-  protected String getTableName() {
+  public String getTableName() {
     if (null != curTableName) {
       return curTableName;
     } else {
@@ -109,7 +107,7 @@ public abstract class BaseSqoopTestCase extends TestCase {
     }
   }
 
-  protected String getWarehouseDir() {
+  public String getWarehouseDir() {
     return LOCAL_WAREHOUSE_DIR;
   }
 
@@ -152,7 +150,7 @@ public abstract class BaseSqoopTestCase extends TestCase {
 
   // instance variables populated during setUp, used during tests
   private HsqldbTestServer testServer;
-  private ConnManager manager;
+  protected ConnManager manager;
 
   private static boolean isLog4jConfigured = false;
 
@@ -284,7 +282,8 @@ public abstract class BaseSqoopTestCase extends TestCase {
    */
   protected void dropTableIfExists(String table) throws SQLException {
     Connection conn = getManager().getConnection();
-    PreparedStatement statement = conn.prepareStatement(dropTableIfExistsCommand(table),
+    String dropStatement = dropTableIfExistsCommand(table);
+    PreparedStatement statement = conn.prepareStatement(dropStatement,
         ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
     try {
       statement.executeUpdate();
@@ -396,6 +395,79 @@ public abstract class BaseSqoopTestCase extends TestCase {
 
       conn.commit();
       this.colNames = colNames;
+    } catch (SQLException se) {
+      if (null != conn) {
+        try {
+          conn.close();
+        } catch (SQLException connSE) {
+          // Ignore exception on close.
+        }
+      }
+      fail("Could not create table: " + StringUtils.stringifyException(se));
+    }
+  }
+
+  protected void insertIntoTable(String[] colTypes, String[] vals) {
+    insertIntoTable(null, colTypes, vals);
+  }
+
+  protected void insertIntoTable(String[] columns, String[] colTypes, String[] vals) {
+    assert colTypes != null;
+    assert colTypes.length == vals.length;
+
+    Connection conn = null;
+    PreparedStatement statement = null;
+
+    String[] colNames;
+    if (columns == null){
+      colNames = new String[vals.length];
+      for( int i = 0; i < vals.length; i++) {
+        colNames[i] = BASE_COL_NAME + Integer.toString(i);
+      }
+    }
+    else {
+      colNames = columns;
+    }
+
+    try {
+        conn = getManager().getConnection();
+        for (int count=0; vals != null && count < vals.length/colTypes.length;
+              ++count ) {
+         String columnListStr = "";
+         String valueListStr = "";
+         for (int i = 0; i < colTypes.length; i++) {
+           columnListStr += manager.escapeColName(colNames[i].toUpperCase());
+           valueListStr += vals[count * colTypes.length + i];
+           if (i < colTypes.length - 1) {
+             columnListStr += ", ";
+             valueListStr += ", ";
+           }
+         }
+         try {
+           String insertValsStr = "INSERT INTO " + manager.escapeTableName(getTableName()) + "(" + columnListStr + ")"
+               + " VALUES(" + valueListStr + ")";
+           LOG.info("Inserting values: " + insertValsStr);
+           statement = conn.prepareStatement(
+               insertValsStr,
+               ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+           statement.executeUpdate();
+         } catch (SQLException sqlException) {
+           fail("Could not insert into table: "
+               + StringUtils.stringifyException(sqlException));
+         } finally {
+           if (null != statement) {
+             try {
+               statement.close();
+             } catch (SQLException se) {
+               // Ignore exception on close.
+             }
+
+             statement = null;
+           }
+         }
+       }
+    conn.commit();
+    this.colNames = colNames;
     } catch (SQLException se) {
       if (null != conn) {
         try {

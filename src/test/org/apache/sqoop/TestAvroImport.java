@@ -112,7 +112,7 @@ public class TestAvroImport extends com.cloudera.sqoop.TestAvroImport {
     checkSchemaFile(schema);
   }
 
-  protected String getTableName() {
+  public String getTableName() {
     return super.getTableName() + "_DECIMAL";
   }
 }

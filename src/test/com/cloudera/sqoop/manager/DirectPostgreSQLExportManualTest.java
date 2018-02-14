@@ -100,7 +100,7 @@ public class DirectPostgreSQLExportManualTest extends TestExport {
   }
 
   @Override
-  protected String getTableName() {
+  public String getTableName() {
     return super.getTableName().toLowerCase();
   }
 
