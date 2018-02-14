@@ -156,7 +156,7 @@ public class OracleCallExportTest extends ExportJobTestCase {
   }
 
   @Override
-  protected String getTableName() {
+  public String getTableName() {
     return tableName;
   }
 

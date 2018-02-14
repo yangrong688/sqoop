@@ -99,7 +99,7 @@ public class TestAppendUtils extends ImportJobTestCase {
   }
 
   // this test just uses the two int table.
-  protected String getTableName() {
+  public String getTableName() {
     return HsqldbTestServer.getTableName();
   }
 

@@ -51,6 +51,13 @@ public class MSSQLTestUtils {
           "sqoop.test.sqlserver.connectstring.host_url",
           "jdbc:sqlserver://sqlserverhost:1433");
 
+  static final String DATABASE_NAME = System.getProperty(
+      "sqoop.test.sqlserver.database",
+      "master");
+
+  static final String CONNECT_STRING = HOST_URL
+      + ";databaseName=" + DATABASE_NAME;
+
   public static final String CREATE_TALBE_LINEITEM
     = "CREATE TABLE TPCH1M_LINEITEM"
     + "( [L_ORDERKEY] [int] NULL, [L_PARTKEY] "

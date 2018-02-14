@@ -293,7 +293,7 @@ public class SQLServerMultiMapsManualTest extends ImportJobTestCase {
     return opts;
   }
 
-  protected String getTableName() {
+  public String getTableName() {
     return "tpch1m_lineitem";
   }
 }

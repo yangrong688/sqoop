@@ -99,7 +99,7 @@ public class DB2ManagerImportManualTest extends ImportJobTestCase {
   }
 
   @Override
-  protected String getTableName() {
+  public String getTableName() {
     return useQualifiedTableName ? QUALIFIED_TABLE_NAME : TABLE_NAME;
   }
 
