@@ -23,13 +23,13 @@
   <parent>
     <groupId>com.cloudera.cdh</groupId>
     <artifactId>sqoop-root</artifactId>
-    <version>1.4.6-cdh5.13.3-SNAPSHOT</version>
+    <version>1.4.6-cdh5.13.3</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   
   <groupId>org.apache.sqoop</groupId>
   <artifactId>sqoop</artifactId>
-  <version>1.4.6-cdh5.13.3-SNAPSHOT</version>
+  <version>1.4.6-cdh5.13.3</version>
   <packaging>pom</packaging>
   
   <name>sqoop</name>
