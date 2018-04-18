@@ -18,9 +18,6 @@
 
 package com.cloudera.sqoop.manager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.commons.logging.Log;
@@ -36,7 +33,8 @@ import com.cloudera.sqoop.testutil.LobAvroImportTestCase;
 public class MySQLLobAvroImportTest extends LobAvroImportTestCase {
 
   public static final Log LOG = LogFactory.getLog(
-      OracleCompatTest.class.getName());
+      MySQLLobAvroImportTest.class.getName());
+
   private MySQLTestUtils mySQLTestUtils = new MySQLTestUtils();
 
   @Override
@@ -64,16 +62,7 @@ public class MySQLLobAvroImportTest extends LobAvroImportTestCase {
 
   @Override
   protected void dropTableIfExists(String table) throws SQLException {
-    Connection conn = getManager().getConnection();
-    PreparedStatement statement = conn.prepareStatement(
-        "DROP TABLE IF EXISTS " + table,
-        ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-    try {
-      statement.executeUpdate();
-      conn.commit();
-    } finally {
-      statement.close();
-    }
+    mySQLTestUtils.dropTableIfExists(table, getManager());
   }
 
   @Override
