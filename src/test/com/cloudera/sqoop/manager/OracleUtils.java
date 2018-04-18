@@ -25,6 +25,8 @@ import java.sql.Statement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.sqoop.manager.ConnManager;
+import org.apache.sqoop.testutil.SqlUtil;
 import com.cloudera.sqoop.SqoopOptions;
 
 /**
@@ -56,7 +58,7 @@ public final class OracleUtils {
 
   private OracleUtils() { }
 
-  public static void setOracleAuth(SqoopOptions options) {
+  public static void setOracleAuth(org.apache.sqoop.SqoopOptions options) {
     options.setUsername(ORACLE_USER_NAME);
     options.setPassword(ORACLE_USER_PASS);
   }
@@ -68,7 +70,9 @@ public final class OracleUtils {
 
   /**
    * Drop a table if it exists.
+   * Use the executeStatement method in {@link SqlUtil} instead.
    */
+  @Deprecated
   public static void dropTable(String tableName, ConnManager manager)
       throws SQLException {
     Connection connection = null;
@@ -98,4 +102,5 @@ public final class OracleUtils {
     return "BEGIN EXECUTE IMMEDIATE 'DROP TABLE " + tableName + "'; "
         + "exception when others then null; end;";
   }
+
 }

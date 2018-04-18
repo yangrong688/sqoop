@@ -43,19 +43,18 @@ public class MSSQLTestUtils {
   public static final Log LOG = LogFactory.getLog(
       MSSQLTestUtils.class.getName());
 
-  static final String DATABASE_USER = System.getProperty(
+  public static final String DATABASE_USER = System.getProperty(
           "ms.sqlserver.username", "SQOOPUSER");
-  static final String DATABASE_PASSWORD = System.getProperty(
+  public static final String DATABASE_PASSWORD = System.getProperty(
           "ms.sqlserver.password", "PASSWORD");
+  public static final String DATABASE_NAME = System.getProperty(
+      "sqoop.test.sqlserver.database",
+      "sqooptest");
   public static final String HOST_URL = System.getProperty(
           "sqoop.test.sqlserver.connectstring.host_url",
           "jdbc:sqlserver://sqlserverhost:1433");
 
-  static final String DATABASE_NAME = System.getProperty(
-      "sqoop.test.sqlserver.database",
-      "master");
-
-  static final String CONNECT_STRING = HOST_URL
+  public static final String CONNECT_STRING = HOST_URL
       + ";databaseName=" + DATABASE_NAME;
 
   public static final String CREATE_TALBE_LINEITEM
