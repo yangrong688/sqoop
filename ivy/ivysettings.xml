@@ -50,6 +50,9 @@ under the License.
   <property name="www.datanucleus.org"
       value="http://www.datanucleus.org/downloads/maven2/"
       override="false"/>
+  <property name="libs-staging-local"
+      value="https://repository.cloudera.com/cloudera/libs-staging-local"
+      override="false"/>
   <property name="maven2.pattern"
       value="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier])"/>
   <property name="repo.dir" value="${user.home}/.m2/repository"/>
@@ -79,6 +82,8 @@ under the License.
         pattern="${maven2.pattern.ext}" m2compatible="true"/>
     <ibiblio name="jboss-maven2" root="${repo.jboss.org}"
                pattern="${maven2.pattern.ext}" m2compatible="true"/>
+    <ibiblio name="cloudera-libs-staging-local" root="${libs-staging-local}"
+               pattern="${maven2.pattern.ext}" m2compatible="true"/>
 
     <filesystem name="fs" m2compatible="true">
        <artifact pattern="${repo.dir}/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"/>
@@ -96,6 +101,7 @@ under the License.
       <resolver ref="jboss-maven2"/>
       <resolver ref="springsource"/>
       <resolver ref="conjars"/>
+      <resolver ref="cloudera-libs-staging-local"/>
     </chain>
 
     <chain name="internal" dual="true">
