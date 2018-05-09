@@ -170,7 +170,9 @@ public abstract class HBaseTestCase extends ImportJobTestCase {
     try {
       hbaseTestUtil = new HBaseTestingUtility();
       // We set the port for the hbase master web UI to -1 because we do not want the info server to run.
-      hbaseTestUtil.getConfiguration().set(MASTER_INFO_PORT, MASTER_INFO_PORT_DISABLE_WEB_UI);
+      Configuration configuration = hbaseTestUtil.getConfiguration();
+      configuration.set(MASTER_INFO_PORT, MASTER_INFO_PORT_DISABLE_WEB_UI);
+      configuration.set("hbase.localcluster.assign.random.ports", "true");
       setupKerberos();
 
       hbaseTestUtil.startMiniCluster();
