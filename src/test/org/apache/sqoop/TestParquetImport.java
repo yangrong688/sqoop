@@ -21,6 +21,8 @@ package org.apache.sqoop;
 import org.apache.avro.util.Utf8;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
+import org.apache.parquet.avro.AvroSchemaConverter;
+import org.apache.parquet.schema.MessageType;
 import org.apache.sqoop.testutil.CommonArgs;
 import org.apache.sqoop.testutil.HsqldbTestServer;
 import org.apache.sqoop.testutil.ImportJobTestCase;
@@ -312,8 +314,9 @@ public class TestParquetImport extends ImportJobTestCase {
   }
 
   private Schema getSchema() {
-    String schemaString = getOutputMetadata().getFileMetaData().getKeyValueMetaData().get("parquet.avro.schema");
-    return new Schema.Parser().parse(schemaString);
+    MessageType parquetSchema = getOutputMetadata().getFileMetaData().getSchema();
+    AvroSchemaConverter avroSchemaConverter = new AvroSchemaConverter();
+    return avroSchemaConverter.convert(parquetSchema);
   }
 
   private void checkField(Field field, String name, Type type) {
