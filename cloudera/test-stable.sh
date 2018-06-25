@@ -46,8 +46,8 @@ function setupJava() {
 
   case ${_JAVA_VERSION} in
     1.7)
-      MAVEN_OPTS="-Xmx1g -Xms128m -XX:MaxPermSize=512m"
-      JAVA_OPTS="-Xmx4g -Xms1g -XX:MaxPermSize=512m"
+      export MAVEN_OPTS="-Xmx1g -Xms128m -XX:MaxPermSize=512m -Dhttps.protocols=TLSv1.2 -Dhttps.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
+      export JAVA_OPTS="-Xmx4g -Xms1g -XX:MaxPermSize=512m"
       if [[ -z $JAVA7_HOME ]]; then
         echo JAVA7_HOME is not set
         exit 1
@@ -57,8 +57,8 @@ function setupJava() {
       ;;
 
     1.8)
-      MAVEN_OPTS="-Xmx1g -Xms128m"
-      JAVA_OPTS="-Xmx4g -Xms1g"
+      export MAVEN_OPTS="-Xmx1g -Xms128m"
+      export JAVA_OPTS="-Xmx4g -Xms1g"
       if [[ -z $JAVA8_HOME ]]; then
         echo JAVA8_HOME is not set
         exit 1
