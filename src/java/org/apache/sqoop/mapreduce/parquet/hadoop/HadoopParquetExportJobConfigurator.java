@@ -16,36 +16,34 @@
  * limitations under the License.
  */
 
-package org.apache.sqoop.mapreduce.parquet.kite;
+package org.apache.sqoop.mapreduce.parquet.hadoop;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.sqoop.mapreduce.parquet.ParquetExportJobConfigurator;
-import org.apache.sqoop.util.FileSystemUtil;
-import org.kitesdk.data.mapreduce.DatasetKeyInputFormat;
+import org.apache.parquet.avro.AvroParquetInputFormat;
 
 import java.io.IOException;
 
 /**
- * An implementation of {@link ParquetExportJobConfigurator} which depends on the Kite Dataset API.
+ * An implementation of {@link ParquetExportJobConfigurator} which depends on the Hadoop Parquet library.
  */
-public class KiteParquetExportJobConfigurator implements ParquetExportJobConfigurator {
+public class HadoopParquetExportJobConfigurator implements ParquetExportJobConfigurator {
 
   @Override
   public void configureInputFormat(Job job, Path inputPath) throws IOException {
-    String uri = "dataset:" + FileSystemUtil.makeQualified(inputPath, job.getConfiguration());
-    DatasetKeyInputFormat.configure(job).readFrom(uri);
+    // do nothing
   }
 
   @Override
   public Class<? extends Mapper> getMapperClass() {
-    return KiteParquetExportMapper.class;
+    return HadoopParquetExportMapper.class;
   }
 
   @Override
   public Class<? extends InputFormat> getInputFormatClass() {
-    return DatasetKeyInputFormat.class;
+    return AvroParquetInputFormat.class;
   }
 }

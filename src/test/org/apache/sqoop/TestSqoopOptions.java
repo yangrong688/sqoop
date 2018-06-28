@@ -91,6 +91,7 @@ public class TestSqoopOptions {
     excludedFieldsFromClone.add("layout");
     excludedFieldsFromClone.add("activeSqoopTool");
     excludedFieldsFromClone.add("hbaseNullIncrementalMode");
+    excludedFieldsFromClone.add("parquetConfiguratorImplementation");
 
     // the SqoopOptions.conf.allowNullValueProperties field is not copied by the copy constructor of
     // org.apache.hadoop.conf.Configuration
