@@ -179,8 +179,9 @@ if [ -d "$SQOOP_HOME/lib" ]; then
 fi
 
 # Add HBase to dependency list
+# Add it before HCat to make sure it takes priority.
 if [ -e "$HBASE_HOME/bin/hbase" ]; then
-  TMP_SQOOP_CLASSPATH=${SQOOP_CLASSPATH}:`$HBASE_HOME/bin/hbase classpath`
+  TMP_SQOOP_CLASSPATH=${SQOOP_CLASSPATH}:`$HBASE_HOME/bin/hbase mapredcp`
   SQOOP_CLASSPATH=${TMP_SQOOP_CLASSPATH}
 fi
 
