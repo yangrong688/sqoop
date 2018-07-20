@@ -33,8 +33,6 @@ import org.apache.hadoop.util.ReflectionUtils;
 
 import static org.apache.sqoop.config.ConfigurationConstants.MAPREDUCE_FRAMEWORK_LOCAL;
 import static org.apache.sqoop.config.ConfigurationConstants.PROP_MAPREDUCE_FRAMEWORK_NAME;
-import static org.apache.sqoop.config.ConfigurationConstants.PROP_MAPRED_JOB_TRACKER_ADDRESS;
-
 /**
  * This class provides static helper methods that allow access and manipulation
  * of job configuration. It is convenient to keep such access in one place in
@@ -122,13 +120,6 @@ public final class ConfigurationHelper {
     job.getConfiguration().setBoolean(
         ConfigurationConstants.PROP_MAPRED_REDUCE_TASKS_SPECULATIVE_EXEC,
         isEnabled);
-  }
-
-  /**
-   * Sets the Jobtracker address to use for a job.
-   */
-  public static void setJobtrackerAddr(Configuration conf, String addr) {
-    conf.set(PROP_MAPRED_JOB_TRACKER_ADDRESS, addr);
   }
 
   /**
