@@ -38,7 +38,7 @@ under the License.
       description="artifacts needed to compile/test the application"/>
 
     <conf name="test" visibility="private" extends="common,runtime"/>
-    
+
     <!-- We don't redistribute everything we depend on (e.g., Hadoop itself);
          anything which Hadoop itself also depends on, we do not ship.
          Things we actually need to ship are marked with a 'redist'
@@ -228,11 +228,16 @@ under the License.
     <dependency org="org.apache.hive.hcatalog" name="hive-hcatalog-core"
       rev="${hcatalog.version}" conf="common->default">
       <artifact name="hive-hcatalog-core" type="jar"/>
+      <exclude org="org.apache.avro" module="avro" />
+      <exclude org="org.apache.hive" module="hive-exec" />
       <exclude org="log4j" module="log4j"/>
       <exclude org="org.apache.logging.slf4j" module="log4j-1.2-api"/>
       <exclude org="org.apache.logging.log4j" module="log4j-slf4j-impl"/>
     </dependency>
 
+    <dependency org="org.apache.hive" name="hive-exec" rev="${hcatalog.version}" conf="common->default" m:classifier="core" />
+    <!-- Kryo is a dependency of hive-exec:core -->
+    <dependency org="com.esotericsoftware" name="kryo" rev="${kryo.version}" conf="common->default" />
     <!-- HCatalog test cases need log4j-api and log4j-core dependencies -->
     <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.8.2" conf="common->default" />
     <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.8.2" conf="common->default" />
