@@ -40,16 +40,6 @@ import org.apache.sqoop.avro.AvroUtil;
 import org.apache.sqoop.mapreduce.ExportJobBase.FileType;
 import org.apache.sqoop.mapreduce.parquet.ParquetMergeJobConfigurator;
 import org.apache.sqoop.util.Jars;
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.Datasets;
-import org.kitesdk.data.Formats;
-import org.kitesdk.data.mapreduce.DatasetKeyOutputFormat;
-import org.apache.parquet.avro.AvroParquetInputFormat;
-import org.apache.parquet.avro.AvroSchemaConverter;
-import org.apache.parquet.hadoop.Footer;
-import org.apache.parquet.hadoop.ParquetFileReader;
-import org.apache.parquet.schema.MessageType;
 
 import org.apache.sqoop.SqoopOptions;
 import org.apache.sqoop.mapreduce.JobBase;
