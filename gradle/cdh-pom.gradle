@@ -1,0 +1,71 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+configurations {
+    cdhPom
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url c6Repository
+    }
+    maven {
+        url 'https://repository.cloudera.com/artifactory/cdh-releases-rcs/'
+    }
+    maven {
+        url 'https://repository.cloudera.com/artifactory/libs-snapshot-local/'
+    }
+}
+
+dependencies {
+    cdhPom "com.cloudera.cdh:cdh-root:${cdhVersion}@pom"
+}
+
+/**
+ If the CDH component versions are not initialized (because the cdh.build.properties file does not exist)
+ we load them from the CDH root pom. 
+ */
+task loadVersionsFromCdhRootPom {
+    if (!project.ext.versionsInited) {
+        logger.info("CDH component versions are not initialized, resolving CDH pom.")
+        configurations.cdhPom.resolve().each { file ->
+            if (file.name.startsWith("cdh-root") && file.name.endsWith(".pom")) {
+                def parser = new XmlSlurper(false, false).parse(file)
+
+                project.ext.hadoopVersion = parser.properties."cdh.hadoop.version"
+                logger.info("Setting hadoop version to $hadoopVersion")
+
+                project.ext.hbaseVersion = parser.properties."cdh.hbase.version"
+                logger.info("Setting hbase version to $hbaseVersion")
+
+                project.ext.hcatalogVersion = parser.properties."cdh.hive.version"
+                logger.info("Setting hcatalog version to $hcatalogVersion")
+
+                project.ext.zookeeperVersion = parser.properties."cdh.zookeeper.version"
+                logger.info("Setting zookeeper version to $zookeeperVersion")
+
+                project.ext.avroVersion = parser.properties."cdh.avro.version"
+                logger.info("Setting avro version to $avroVersion")
+
+                project.ext.kitedataVersion = parser.properties."cdh.kite.version"
+                logger.info("Setting kite version to $kitedataVersion")
+            }
+        }
+    }
+}

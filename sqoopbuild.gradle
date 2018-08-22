@@ -25,6 +25,16 @@ apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
 apply plugin: 'findbugs'
 apply plugin: 'maven-publish'
+apply plugin: 'maven'
+
+/*
+We need to initialize the CDH component version variables (hadoopVersion, hbaseVersion, etc.)
+before we start resolving the dependencies.
+We try to initialize them from the cdh.build.properties file first but if it does not exist
+we default to the CDH root pom.
+*/
+apply from: 'gradle/cdh-build-properties.gradle'
+apply from: 'gradle/cdh-pom.gradle'
 
 apply from: 'gradle/sqoop-version-gen.gradle'
 apply from: 'gradle/sqoop-package.gradle'
@@ -32,13 +42,6 @@ apply from: 'gradle/sqoop-package.gradle'
 group = 'org.apache.sqoopgradle'
 
 sourceCompatibility = javaSourceCompatibilityVersion
-
-repositories {
-    mavenCentral()
-    maven {
-        url 'http://conjars.org/repo/'
-    }
-}
 
 sourceSets {
     main {
@@ -76,7 +79,7 @@ configurations {
 
 compileJava.dependsOn(SqoopVersionFileGen)
 
-configurations.all {
+configurations.compile {
     resolutionStrategy {
         force group: 'org.apache.avro', name: 'avro', version: avroVersion
         force group: 'org.apache.avro', name: 'avro-mapred', version: avroVersion
@@ -106,6 +109,12 @@ dependencies {
     common group: 'org.apache.hbase', name: 'hbase-server', version: hbaseVersion
     common group: 'org.apache.hbase', name: 'hbase-client', version: hbaseVersion
     common group: 'org.apache.hbase', name: 'hbase-common', version: hbaseVersion
+    common group: 'org.apache.hbase', name: 'hbase-zookeeper', version: hbaseVersion
+    common group: 'org.apache.hbase', name: 'hbase-mapreduce', version: hbaseVersion
+    common group: 'org.apache.hbase', name: 'hbase-metrics-api', version: hbaseVersion
+    common group: 'org.apache.hbase', name: 'hbase-metrics', version: hbaseVersion
+    common group: 'org.apache.hbase', name: 'hbase-http', version: hbaseVersion
+    common group: 'org.eclipse.jetty', name: 'jetty-runner', version: jettyVersion
     common (group: 'org.apache.hive.hcatalog', name: 'hive-hcatalog-core', version: hcatalogVersion) {
         exclude  group: 'org.apache.avro', module: 'avro'
         exclude  group: 'org.apache.hive', module: 'hive-exec'
@@ -115,6 +124,7 @@ dependencies {
     common group: 'com.esotericsoftware', name: 'kryo', version: kryoVersion
     common group: 'org.apache.calcite', name: 'calcite-core', version: calciteVersion
     common group: 'org.apache.calcite', name: 'calcite-druid', version: calciteVersion
+
     common (group: 'org.apache.hive', name: 'hive-jdbc', version: hcatalogVersion) {
         exclude  group: 'org.apache.avro', module: 'avro'
     }
@@ -128,6 +138,9 @@ dependencies {
     testCompile group: 'org.apache.hbase', name: 'hbase-server', version: hbaseVersion, classifier: 'tests'
     testCompile group: 'org.apache.hbase', name: 'hbase-hadoop2-compat', version: hbaseVersion, classifier: 'tests'
     testCompile group: 'org.apache.hbase', name: 'hbase-hadoop-compat', version: hbaseVersion, classifier: 'tests'
+    testCompile group: 'org.apache.hbase', name: 'hbase-mapreduce', version: hbaseVersion, classifier: 'tests'
+    testCompile group: 'org.apache.hbase', name: 'hbase-zookeeper', version: hbaseVersion, classifier: 'tests'
+    testCompile group: 'org.apache.hbase', name: 'hbase-common', version: hbaseVersion, classifier: 'tests'
     testCompile( group: 'org.apache.hadoop', name: 'hadoop-minikdc', version: hadoopVersion) {
      exclude  group: 'org.apache.directory.api', module: 'api-ldap-schema-data'
     }
@@ -166,7 +179,7 @@ task buildFolder {
 
 tasks.withType(Test) {
     testLogging {
-        events 'started', 'passed', 'skipped'
+        events 'passed', 'skipped'
     }
     workingDir = testBuildDirData
     project.mkdir(workingDir)

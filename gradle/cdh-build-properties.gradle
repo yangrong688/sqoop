@@ -1,0 +1,57 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ext.propertiesFileName = "cdh.build.properties"
+ext.versionsInited = false
+
+/**
+ This task tries to load the CDH component versions from the cdh.build.properties file.
+ This file usually contains the component version numbers for a specific GBN and it is
+ generated using a separate maven command.
+ */
+task loadVersionsFromCdhBuildProperties() {
+    def props = new Properties()
+    if (file(propertiesFileName).exists()) {
+        logger.info("$project.ext.propertiesFileName exists, loading CDH component versions.")
+
+        file(propertiesFileName).withInputStream { props.load(it) }
+        project.ext.hadoopVersion = props.getProperty("hadoop.version")
+        logger.info("Setting hadoop version to $hadoopVersion")
+
+        project.ext.hbaseVersion = props.getProperty("hbase.version")
+        logger.info("Setting hbase version to $hbaseVersion")
+
+        project.ext.hcatalogVersion = props.getProperty("hcatalog.version")
+        logger.info("Setting hcatalog version to $hcatalogVersion")
+
+        project.ext.zookeeperVersion = props.getProperty("zookeeper.version")
+        logger.info("Setting zookeeper version to $zookeeperVersion")
+
+        project.ext.avroVersion = props.getProperty("avro.version")
+        logger.info("Setting avro version to $avroVersion")
+
+        project.ext.kitedataVersion = props.getProperty("kite-data.version")
+        logger.info("Setting kite version to $kitedataVersion")
+
+        // We override the c6Repository variable too with the repository corresponding to the GBN.
+        project.ext.c6Repository = props.getProperty("releases.cloudera.com")
+        logger.info("Setting c6Repository to $c6Repository")
+
+        project.ext.versionsInited = true
+    }
+}
