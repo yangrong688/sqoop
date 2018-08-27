@@ -238,8 +238,10 @@ under the License.
     </dependency>
 
     <dependency org="org.apache.hive" name="hive-exec" rev="${hcatalog.version}" conf="common->default" m:classifier="core" />
-    <!-- Kryo is a dependency of hive-exec:core -->
+    <!-- Kryo and calcite are dependencies of hive-exec:core -->
     <dependency org="com.esotericsoftware" name="kryo" rev="${kryo.version}" conf="common->default" />
+    <dependency org="org.apache.calcite" name="calcite-core" rev="${calcite.version}" conf="common->default" />
+    <dependency org="org.apache.calcite" name="calcite-druid" rev="${calcite.version}" conf="common->default" />
     <!-- HCatalog test cases need log4j-api and log4j-core dependencies -->
     <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.8.2" conf="common->default" />
     <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.8.2" conf="common->default" />
