@@ -27,7 +27,8 @@ containers=(sqoop_mysql_container \
             sqoop_mssql_container \
             sqoop_cubrid_container \
             sqoop_oracle_container \
-            sqoop_db2_container)
+            sqoop_db2_container \
+            sqoop_mainframe_gdg_container)
 
 for container in ${containers[@]}; do
     containerStatus=`docker inspect --format='{{json .State.Status}}' $container`
