@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URL;
 import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -55,6 +56,8 @@ public class HiveMiniCluster {
   private final HiveServer2 hiveServer2;
 
   private HiveConf config;
+
+  private URL originalHiveSiteLocation;
 
   public HiveMiniCluster(AuthenticationConfiguration authenticationConfiguration) {
     this(DEFAULT_HOST, DEFAULT_PORT, authenticationConfiguration);
@@ -104,6 +107,7 @@ public class HiveMiniCluster {
       config.writeXml(out);
     }
 
+    originalHiveSiteLocation = HiveConf.getHiveSiteLocation();
     HiveConf.setHiveSiteLocation(hiveSiteXmlFile.toURI().toURL());
   }
 
@@ -120,7 +124,7 @@ public class HiveMiniCluster {
 
   public void stop() {
     hiveServer2.stop();
-    HiveConf.setHiveSiteLocation(null);
+    HiveConf.setHiveSiteLocation(originalHiveSiteLocation);
     try {
       FileUtils.deleteDirectory(new File(tempFolderPath));
     } catch (IOException e) {
