@@ -53,7 +53,7 @@ under the License.
   <property name="repo.dir" value="${user.home}/.m2/repository"/>
   <property name="maven2.pattern.ext"  value="${maven2.pattern}.[ext]"/>
   <property name="resolvers" value="default" override="false"/>
-  <settings defaultResolver="${resolvers}"/>
+  <settings defaultResolver="${resolvers}" httpRequestMethod="GET"/>
 
   <resolvers>
     <!-- CDH build repo, the pattern attribute handles SNAPSHOT artifacts -->
