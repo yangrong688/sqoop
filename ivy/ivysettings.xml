@@ -71,8 +71,6 @@ under the License.
         m2compatible="true" checkmodified="true" changingPattern=".*SNAPSHOT"/>
     <ibiblio name="cloudera-snapshot" root="${snapshots.cloudera.com}"
         m2compatible="true" checkmodified="true" changingPattern=".*SNAPSHOT"/>
-    <ibiblio name="springsource" root="http://repo.springsource.org/libs-release-remote/"
-        pattern="${maven2.pattern.ext}" m2compatible="true"/>
     <ibiblio name="conjars" root="http://conjars.org/repo"
         pattern="${maven2.pattern.ext}" m2compatible="true"/>
 
@@ -89,7 +87,6 @@ under the License.
       <resolver ref="reactor-repo"/>
       <resolver ref="cloudera-snapshot"/>
       <resolver ref="maven2"/>
-      <resolver ref="springsource"/>
       <resolver ref="conjars"/>
     </chain>
 
