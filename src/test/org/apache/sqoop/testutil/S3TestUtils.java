@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
+import static org.apache.sqoop.tool.BaseSqoopTool.FMT_PARQUETFILE_ARG;
 import static org.apache.sqoop.util.AppendUtils.MAPREDUCE_OUTPUT_BASENAME_PROPERTY;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeNotNull;
@@ -154,6 +155,11 @@ public class S3TestUtils {
         // Sqoop relies on the S3 credentials set via the -D system properties.
         // For details please see SQOOP-3383
         hadoopConf.setBoolean("fs.s3a.impl.disable.cache", true);
+
+        // Enable S3Guard to prevent flakiness of S3 tests due to the eventually consistency of Amazon S3
+        hadoopConf.set(Constants.S3_METADATA_STORE_IMPL, "org.apache.hadoop.fs.s3a.s3guard.DynamoDBMetadataStore");
+        hadoopConf.set(Constants.S3GUARD_DDB_TABLE_CREATE_KEY, "true");
+        hadoopConf.set(Constants.S3GUARD_DDB_REGION_KEY, "us-east-1");
     }
 
     public static HiveMiniCluster setupS3ExternalHiveTableImportTestCase(S3CredentialGenerator s3CredentialGenerator) {
@@ -168,6 +174,10 @@ public class S3TestUtils {
                                                                              S3CredentialGenerator s3CredentialGenerator) {
         ArgumentArrayBuilder builder = new ArgumentArrayBuilder();
         return builder.withCommonHadoopFlags()
+                // Enable S3Guard to prevent flakiness of S3 tests due to the eventually consistency of Amazon S3
+                .withProperty(Constants.S3_METADATA_STORE_IMPL, "org.apache.hadoop.fs.s3a.s3guard.DynamoDBMetadataStore")
+                .withProperty(Constants.S3GUARD_DDB_TABLE_CREATE_KEY, "true")
+                .withProperty(Constants.S3GUARD_DDB_REGION_KEY, "us-east-1")
                 .withProperty(Constants.ACCESS_KEY, s3CredentialGenerator.getS3AccessKey())
                 .withProperty(Constants.SECRET_KEY, s3CredentialGenerator.getS3SecretKey())
                 .withProperty(Constants.SESSION_TOKEN, s3CredentialGenerator.getS3SessionToken())
@@ -195,6 +205,7 @@ public class S3TestUtils {
                                                                                                  String fileFormat) {
         ArgumentArrayBuilder builder = getArgumentArrayBuilderForS3UnitTests(testCase, s3CredentialGenerator);
         builder.withOption(fileFormat);
+        useParquetHadoopAPIImplementationIfAsParquet(builder,fileFormat);
         return builder;
     }
 
@@ -203,7 +214,15 @@ public class S3TestUtils {
                                                                      String fileFormat) {
         ArgumentArrayBuilder builder = getArgumentArrayBuilderForS3UnitTests(testCase, s3CredentialGenerator);
         builder.withOption(fileFormat);
+        useParquetHadoopAPIImplementationIfAsParquet(builder,fileFormat);
         return builder.build();
+    }
+
+    private static void useParquetHadoopAPIImplementationIfAsParquet(ArgumentArrayBuilder builder, String fileFormat) {
+        // S3 import as Parquet is supported only with the Parquet Hadoop API implementation.
+        if (fileFormat.equals(FMT_PARQUETFILE_ARG)) {
+            builder.withOption("parquet-configurator-implementation", "hadoop");
+        }
     }
 
     public static ArgumentArrayBuilder addExternalHiveTableImportArgs(ArgumentArrayBuilder builder,
