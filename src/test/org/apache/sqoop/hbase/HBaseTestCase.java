@@ -183,6 +183,7 @@ public abstract class HBaseTestCase extends ImportJobTestCase {
       configuration.set(MASTER_INFO_PORT, INFO_PORT_DISABLE_WEB_UI);
       configuration.set(REGIONSERVER_INFO_PORT, INFO_PORT_DISABLE_WEB_UI);
       configuration.set("hbase.localcluster.assign.random.ports", "true");
+	  configuration.set("fs.file.impl.disable.cache", "true");
       setupKerberos();
 
       hbaseTestUtil.startMiniCluster();
