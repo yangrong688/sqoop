@@ -148,13 +148,16 @@ function setupAntFlags() {
                    -Djava.security.egd=file:///dev/./urandom \
                    -Dmapred.child.java.opts=-Djava.security.egd=file:/dev/../dev/urandom \
                    -Dtest.timeout=1000000 \
-                   -Dsqoop.test.mysql.connectstring.host_url=jdbc:mysql://127.0.0.1:3306/ \
+                   -Dsqoop.test.mysql.connectstring.host_url=jdbc:mysql://127.0.0.1:13306/ \
                    -Dsqoop.test.mysql.databasename=sqoop -Dsqoop.test.mysql.password=Sqoop12345 \
                    -Dsqoop.test.mysql.username=sqoop \
-                   -Dsqoop.test.oracle.connectstring=jdbc:oracle:thin:@//localhost:1521/sqoop \
+                   -Dsqoop.test.oracle.connectstring=jdbc:oracle:thin:@//localhost:1521/xe \
                    -Dsqoop.test.oracle.username=SYSTEM \
-                   -Dsqoop.test.oracle.password=Sqoop12345 \
-                   -Dsqoop.test.postgresql.connectstring.host_url=jdbc:postgresql://localhost/ \
+                   -Dsqoop.test.oracle.password=oracle \
+                   -Dsqoop.test.oracle-ee.connectstring=jdbc:oracle:thin:@//localhost:1522/sqoop \
+                   -Dsqoop.test.oracle-ee.username=SYSTEM \
+                   -Dsqoop.test.oracle-ee.password=Sqoop12345 \
+                   -Dsqoop.test.postgresql.connectstring.host_url=jdbc:postgresql://localhost:15432/ \
                    -Dsqoop.test.postgresql.database=sqoop \
                    -Dsqoop.test.postgresql.username=sqoop \
                    -Dsqoop.test.postgresql.password=Sqoop12345 \

@@ -26,6 +26,7 @@ containers=(sqoop_mysql_container \
             sqoop_postgresql_container \
             sqoop_mssql_container \
             sqoop_cubrid_container \
+            sqoop_oracle-ee_container \
             sqoop_oracle_container \
             sqoop_db2_container \
             sqoop_mainframe_gdg_container)

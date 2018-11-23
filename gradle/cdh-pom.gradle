@@ -31,6 +31,13 @@ repositories {
     maven {
         url 'https://repository.cloudera.com/artifactory/libs-snapshot-local/'
     }
+    maven {
+        url 'http://maven.cubrid.org/'
+    }
+    // DB2 driver repository
+    maven {
+        url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
+    }
 }
 
 dependencies {
