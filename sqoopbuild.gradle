@@ -89,6 +89,7 @@ configurations.compile {
 }
 
 def sqoopThirdPartyLib = System.getProperty("sqoop.thirdparty.lib.dir")
+def ignoreTestFailures = Boolean.getBoolean("ignoreTestFailures")
 
 dependencies {
     if (sqoopThirdPartyLib != null) runtime fileTree(dir: sqoopThirdPartyLib, include: '*.jar')
@@ -161,6 +162,7 @@ dependencies {
 
 test {
     include '**/Test*.*'
+    ignoreFailures ignoreTestFailures
 }
 
 task thirdPartyTest(type: Test) {
