@@ -23,7 +23,6 @@ CLOUDERA_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export GRADLE_ARGUMENTS="-Dorg.gradle.daemon=false \
                          -DforkEvery.default=30 \
                          -DignoreTestFailures=true \
-                         -Dsqoop.thirdparty.lib.dir=./oracledriver \
                          $GRADLE_ARGUMENTS"
 
 
@@ -45,11 +44,6 @@ if [[ $? -ne 0 ]]; then
     sudo $CLOUDERA_DIR/../src/scripts/thirdpartytest/stop-thirdpartytest-db-containers.sh
     exit 1
 fi
-
-# Only Oracle driver is needed the rest of the drivers are resolved
-# from Maven repositories.
-mkdir -p oracledriver
-cp /sqoop-3rdparty/ojdbc6.jar ./oracledriver/
 
 $CLOUDERA_DIR/../gradlew $GRADLE_ARGUMENTS thirdPartyTest
 

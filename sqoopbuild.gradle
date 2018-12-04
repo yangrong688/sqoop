@@ -98,12 +98,10 @@ configurations.compile {
     exclude group: 'org.apache.hadoop', module: 'avro'
 }
 
-def sqoopThirdPartyLib = System.getProperty("sqoop.thirdparty.lib.dir")
 def forkEveryDefault = Integer.valueOf(System.getProperty("forkEvery.default", "0"))
 def ignoreTestFailures = Boolean.getBoolean("ignoreTestFailures")
 
 dependencies {
-    if (sqoopThirdPartyLib != null) runtime fileTree(dir: sqoopThirdPartyLib, include: '*.jar')
     compile group: 'org.apache.hadoop', name: 'hadoop-aws', version: hadoopVersion
     compile (group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion) {
         exclude group: "asm", module: "asm"
@@ -175,6 +173,8 @@ dependencies {
     testCompile group: 'cubrid', name: 'cubrid-jdbc', version: cubridJdbcDriverVersion
     testCompile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: msSqlJdbcDriverVersion
     testCompile group: 'com.ibm.db2.jcc', name: 'db2jcc4', version: db2JdbcDriverVersion
+    testCompile group: 'oracle', name: 'ojdbc6', version: oracleJdbcDriverVersion
+
 }
 
 task unitTest (type: Test) {

@@ -38,6 +38,10 @@ repositories {
     maven {
         url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
     }
+    // Oracle driver repository
+    maven {
+        url 'http://www.datanucleus.org/downloads/maven2/'
+    }
 }
 
 dependencies {
