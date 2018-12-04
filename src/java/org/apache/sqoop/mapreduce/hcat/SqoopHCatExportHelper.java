@@ -34,8 +34,6 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.util.ReflectionUtils;
-import org.apache.hive.hcatalog.common.HCatConstants;
-import org.apache.hive.hcatalog.common.HCatUtil;
 import org.apache.hive.hcatalog.data.HCatRecord;
 import org.apache.hive.hcatalog.data.schema.HCatFieldSchema;
 import org.apache.hive.hcatalog.data.schema.HCatSchema;
@@ -108,9 +106,7 @@ public class SqoopHCatExportHelper {
         + recordClassName);
     }
 
-    String inputJobInfoStr = conf.get(HCatConstants.HCAT_KEY_JOB_INFO);
-    jobInfo =
-      (InputJobInfo) HCatUtil.deserialize(inputJobInfoStr);
+    jobInfo = SqoopHCatUtilities.deserializeInputJobInfo(conf);
     HCatSchema tableSchema = jobInfo.getTableInfo().getDataColumns();
     HCatSchema partitionSchema =
       jobInfo.getTableInfo().getPartitionColumns();

@@ -41,8 +41,6 @@ import org.apache.hadoop.hive.serde2.typeinfo.VarcharTypeInfo;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.DefaultStringifier;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hive.hcatalog.common.HCatConstants;
-import org.apache.hive.hcatalog.common.HCatUtil;
 import org.apache.hive.hcatalog.data.DefaultHCatRecord;
 import org.apache.hive.hcatalog.data.HCatRecord;
 import org.apache.hive.hcatalog.data.schema.HCatFieldSchema;
@@ -84,8 +82,7 @@ public class SqoopHCatImportHelper {
   public SqoopHCatImportHelper(Configuration conf) throws IOException,
     InterruptedException {
 
-    String inputJobInfoStr = conf.get(HCatConstants.HCAT_KEY_JOB_INFO);
-    jobInfo = (InputJobInfo) HCatUtil.deserialize(inputJobInfoStr);
+    jobInfo = SqoopHCatUtilities.deserializeInputJobInfo(conf);
     dataColsSchema = jobInfo.getTableInfo().getDataColumns();
     partitionSchema = jobInfo.getTableInfo().getPartitionColumns();
     StringBuilder storerInfoStr = new StringBuilder(1024);

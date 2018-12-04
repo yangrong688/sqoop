@@ -66,6 +66,7 @@ import org.apache.hive.hcatalog.data.schema.HCatFieldSchema;
 import org.apache.hive.hcatalog.data.schema.HCatSchema;
 import org.apache.hive.hcatalog.mapreduce.HCatInputFormat;
 import org.apache.hive.hcatalog.mapreduce.HCatOutputFormat;
+import org.apache.hive.hcatalog.mapreduce.InputJobInfo;
 import org.apache.hive.hcatalog.mapreduce.OutputJobInfo;
 import org.apache.sqoop.config.ConfigurationConstants;
 import org.apache.sqoop.config.ConfigurationHelper;
@@ -197,6 +198,12 @@ public final class SqoopHCatUtilities {
         .getHCatDatabaseName() : DEFHCATDB;
     hCatDatabaseName = hCatDatabaseName.toLowerCase();
     return hCatDatabaseName;
+  }
+
+  public static InputJobInfo deserializeInputJobInfo(Configuration conf) throws IOException {
+    String inputJobInfoStr = conf.get(HCatConstants.HCAT_KEY_JOB_INFO);
+    List hcatInfo = (List) HCatUtil.deserialize(inputJobInfoStr);
+    return (InputJobInfo) hcatInfo.get(0);
   }
 
   static class IntArrayWritable extends ArrayWritable {
