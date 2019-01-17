@@ -103,6 +103,8 @@ def ignoreTestFailures = Boolean.getBoolean("ignoreTestFailures")
 
 dependencies {
     compile group: 'org.apache.hadoop', name: 'hadoop-aws', version: hadoopVersion
+    compile group: 'org.apache.hadoop', name: 'hadoop-azure', version: hadoopVersion
+    compile group: 'org.apache.hadoop', name: 'hadoop-azure-datalake', version: hadoopVersion
     compile (group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion) {
         exclude group: "asm", module: "asm"
     }
@@ -311,6 +313,20 @@ task s3Test(type: Test) {
     description 'Run S3 tests'
     useJUnit {
         includeCategories 'org.apache.sqoop.testcategories.thirdpartytest.S3Test'
+    }
+}
+
+task abfsTest(type: Test) {
+    description 'Run Abfs tests'
+    useJUnit {
+        includeCategories 'org.apache.sqoop.testcategories.thirdpartytest.AbfsTest'
+    }
+}
+
+task adlTest(type: Test) {
+    description 'Run Adl tests'
+    useJUnit {
+        includeCategories 'org.apache.sqoop.testcategories.thirdpartytest.AdlTest'
     }
 }
 

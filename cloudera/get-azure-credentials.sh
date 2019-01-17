@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # Copyright 2011 The Apache Software Foundation
 #
@@ -17,20 +17,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# Compiles the world and runs available unit tests.
+# This script is intended for execution by users who want to thoroughly
+# execute all tests, or automated testing agents such as Hudson.
 
-CLOUDERA_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-export GRADLE_ARGUMENTS="-Dorg.gradle.daemon=false \
-                         -DignoreTestFailures=true \
-                         -Ds3.bucket.url=${SQOOP_S3_BUCKET_URL} \
-                         -Ds3.generator.command=${CLOUDERA_DIR}/get-temporary-aws-s3-credentials.sh \
-                         $GRADLE_ARGUMENTS"
-
-
-# Run tests in the S3Test category
-$CLOUDERA_DIR/../gradlew $GRADLE_ARGUMENTS s3Test
-
-if [[ $? -ne 0 ]]; then
-  echo "Error executing test task. Aborting!"
-  exit 1
-fi
+echo $SQOOP_AZURE_CLIENT_ENDPOINT $SQOOP_AZURE_CLIENT_ID $SQOOP_AZURE_CREDENTIAL
