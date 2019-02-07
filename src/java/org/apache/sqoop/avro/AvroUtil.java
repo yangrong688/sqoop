@@ -234,6 +234,10 @@ public final class AvroUtil {
         }
         return avroObject;
       case BYTES:
+        if (isDecimal(schema)) {
+            // Should automatically be a BigDecimal object.
+            return avroObject;
+        }
         ByteBuffer bb = (ByteBuffer) avroObject;
         BytesWritable bw = new BytesWritable();
         bw.set(bb.array(), bb.arrayOffset() + bb.position(), bb.remaining());
