@@ -188,10 +188,12 @@
   <!-- Ivy-based dependency resolution -->
   <property name="ivysettings.xml" location="${ivy.dir}/ivysettings.xml"/>
   <property name="ivy.jar" location="${lib.dir}/ivy-${ivy.version}.jar"/>
+  <property name="ivy_repo" value="http://repo2.maven.org/maven2"/>
   <property name="ivy_repo_url"
-  value="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" />
+  value="${ivy_repo}/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"/>
+  <property name="mvn_repo" value="http://repo2.maven.org/maven2"/>
   <property name="mvn_repo_url"
-  value="http://repo2.maven.org/maven2/org/apache/maven/maven-ant-tasks/${mvn.version}/maven-ant-tasks-${mvn.version}.jar"/>
+  value="${mvn_repo}/org/apache/maven/maven-ant-tasks/${mvn.version}/maven-ant-tasks-${mvn.version}.jar"/>
   <property name="mvn.jar"
       location="${build.dir}/maven-ant-tasks-${mvn.version}.jar" />
   <property name="build.ivy.dir" location="${build.dir}/ivy" />
